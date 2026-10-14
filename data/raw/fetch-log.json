@@ -70,5 +70,9 @@
   "DRT_bus_stop_list.csv": {
     "fetchedAt": "2026-10-14",
     "sha256": "3c9f532fe7166853ba5e16d8a2f14e22c5dc821f26c4d74b7e04024764f8ccc9"
+  },
+  "hugca_list.csv": {
+    "fetchedAt": "2026-10-14",
+    "sha256": "82f4d0d7df9f0b6ccd3f6e37cff63460a91078f679de9d5b7188b36a7b9be723"
   }
 }

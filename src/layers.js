@@ -13,6 +13,7 @@ export const LAYERS = [
   { id: 'school', label: '小・中学校', short: '学校', color: '#7a5c00', shape: 'square', glyph: '学', nearby: false, on: false },
   { id: 'public', label: '公共施設', short: '公共施設', color: '#33415c', shape: 'hexagon', glyph: '公', nearby: false, on: false },
   { id: 'tourism', label: '観光施設', short: '観光', color: '#1b5e20', shape: 'diamond', glyph: '観', nearby: false, on: false },
+  { id: 'hugca', label: 'HUGCA（ハグカ）協賛店', short: 'HUGCA協賛店', color: '#c2185b', shape: 'diamond', glyph: 'ハ', nearby: false, on: false },
   { id: 'wifi', label: '公衆無線LANアクセスポイント', short: 'Wi-Fi', color: '#006064', shape: 'hexagon', glyph: 'W', nearby: true, on: false },
   { id: 'exchange', label: '交流施設・アトリエ付滞在型施設', short: '交流施設', color: '#6d4c00', shape: 'pentagon', glyph: '交', nearby: false, on: false },
   { id: 'hydrant', label: '消火栓', short: '消火栓', color: '#b3261e', shape: 'circle', glyph: '消', nearby: false, on: false, minzoom: 14 },
@@ -41,3 +42,7 @@ export const DISTRICT_MODES = [
   { id: 'density', label: '人口密度', prop: 'density', unit: '人/km²' },
 ];
 export const DISTRICT_COLORS = ['#f1eef6', '#bdc9e1', '#74a9cf', '#2b8cbe', '#045a8d'];
+
+// 三条市子育て支援事業 HUGCA（ハグカ）の案内ページ（特典の内容はこちらで確認する）
+export const HUGCA_INFO_URL =
+  'https://www.city.sanjo.niigata.jp/soshiki/sanjoukyouiku/kyoikuiinkaijimukyoku/kosodateshienka/7/101/index.html';

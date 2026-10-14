@@ -96,6 +96,9 @@ LAYERS = {
         file="000114888.csv", label="介護サービス施設",
         name="介護サービス事業所名称", address="住所", phone="電話番号",
         services="実施サービス", details=[("備考", "備考")], group=True),
+    "hugca": dict(
+        file="hugca_list.csv", label="HUGCA（ハグカ）協賛店",
+        name="場所名称", address="住所", phone="連絡先電話番号", sub="分類", url="URL", details=[]),
     "wifi": dict(
         file="000104492.csv", label="公衆無線LANアクセスポイント",
         name="施設", address="住所", phone="電話番号", url="url", details=[]),

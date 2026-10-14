@@ -1,7 +1,7 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './style.css';
-import { LAYERS, HAZARDS, OFFICIAL_HAZARD_URL, DISTRICT_MODES, DISTRICT_COLORS } from './layers.js';
+import { LAYERS, HAZARDS, OFFICIAL_HAZARD_URL, DISTRICT_MODES, DISTRICT_COLORS, HUGCA_INFO_URL } from './layers.js';
 import { iconImageData, iconDataUrl } from './icons.js';
 import { distanceM, formatDistance, bearingLabel, geocode } from './geo.js';
 
@@ -227,6 +227,11 @@ function popupContent(layerId, feature) {
   if (p.approx) {
     root.append(el('p', { class: 'popup-warn' },
       `位置は「${(p.located || '').replace('新潟県三条市', '')}」付近の目安で、正確な場所ではありません。住所をもとに町丁目の代表点へ配置しています。`));
+  }
+  if (layerId === 'hugca') {
+    root.append(el('p', { class: 'popup-warn' }, '特典の内容・条件・利用できる方は、店舗によって異なります。三条市の案内でご確認ください。'));
+    root.append(el('a', { href: HUGCA_INFO_URL, target: '_blank', rel: 'noopener noreferrer', class: 'popup-link' },
+      'HUGCA（ハグカ）の案内（三条市）'));
   }
   if (layerId === 'shelter') {
     root.append(el('p', { class: 'popup-warn' }, '使用可否は災害の種類や状況で変わります。避難時は三条市の避難情報を確認してください。'));

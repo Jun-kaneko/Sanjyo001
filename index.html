@@ -35,6 +35,7 @@
       <ul id="search-results" class="result-choices" hidden></ul>
 
       <div class="tabs" role="tablist" aria-label="パネルの切替">
+        <button role="tab" id="tab-map" aria-selected="false" class="tab tab-map" tabindex="-1">地図</button>
         <button role="tab" id="tab-nearby" aria-controls="view-nearby" aria-selected="true" class="tab">うちの近く</button>
         <button role="tab" id="tab-layers" aria-controls="view-layers" aria-selected="false" class="tab" tabindex="-1">表示の切替</button>
         <button role="tab" id="tab-about" aria-controls="view-about" aria-selected="false" class="tab" tabindex="-1">データ</button>
@@ -85,7 +86,7 @@
       <div id="view-about" role="tabpanel" aria-labelledby="tab-about" class="view" hidden>
         <h2 class="h2">このサイトについて</h2>
         <p class="note">
-          三条市が公開するオープンデータと国土地理院のタイルを使い、自宅周辺の施設を地図で確認できるようにした、<strong>個人作成の非公式サイト</strong>です。三条市が運営するものではありません。パソコンのブラウザでの利用を想定しています。
+          三条市が公開するオープンデータと国土地理院のタイルを使い、自宅周辺の施設を地図で確認できるようにした、<strong>個人作成の非公式サイト</strong>です。三条市が運営するものではありません。パソコンでの利用がおすすめですが、スマートフォンでも画面下のタブで操作できます。
         </p>
         <p class="note">
           運営者: 金子純<br />
@@ -109,6 +110,7 @@
     </section>
 
     <section class="map-wrap" aria-label="地図">
+      <div id="sheet-host" class="sheet-host"></div>
       <div id="map-legend" class="map-legend" hidden></div>
       <div id="map" role="application" aria-label="三条市の地図。ピンや施設はリストからも選べます"></div>
       <noscript><p class="status">この地図の表示には JavaScript が必要です。</p></noscript>

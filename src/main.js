@@ -243,7 +243,7 @@ function openPopup(layerId, feature, sameSpot = []) {
       el('p', { class: 'popup-count' }, `この地点に ${sameSpot.length} 件あります`),
       sameSpot.map((f) => popupContent(layerId, f)));
   }
-  state.popup = new maplibregl.Popup({ maxWidth: '320px', offset: 18, focusAfterOpen: true })
+  state.popup = new maplibregl.Popup({ maxWidth: '320px', offset: 18, focusAfterOpen: !isMobile() })
     .setLngLat(feature.geometry.coordinates)
     .setDOMContent(content)
     .addTo(map);
@@ -352,7 +352,10 @@ function renderNearby() {
     const dist = el('span', { class: 'nearby-dist' }, `${formatDistance(d)} ${bearingLabel(state.pin, feature.geometry.coordinates)}`);
     btn.append(img, text, dist);
     btn.addEventListener('click', () => {
-      map.flyTo({ center: feature.geometry.coordinates, zoom: Math.max(map.getZoom(), 16) });
+      if (isMobile()) selectTab('map'); // シートを閉じて地図を見せる
+      // スマホでは地図が小さいため、施設を上寄りに置いて吹き出しの下側を確保する
+      const up = isMobile() ? -Math.round(map.getContainer().clientHeight * 0.22) : 0;
+      map.flyTo({ center: feature.geometry.coordinates, zoom: Math.max(map.getZoom(), 16), offset: [0, up] });
       openPopup(layer.id, feature);
       document.querySelector('.map-wrap').scrollIntoView({ block: 'nearest' });
     });
@@ -422,6 +425,25 @@ function onLocate() {
 }
 
 // ---------- UI ----------
+// スマホ（幅899px以下）では「近く/表示/データ」を地図の上に重なるシートとして表示する
+const mobileMq = window.matchMedia('(max-width: 899px)');
+const isMobile = () => mobileMq.matches;
+
+function placeSheets() {
+  const host = $('sheet-host');
+  const panel = document.querySelector('.panel');
+  const footer = document.querySelector('.site-footer');
+  const views = [...document.querySelectorAll('.view')];
+  if (isMobile()) {
+    views.forEach((v) => host.append(v));
+    $('view-about').append(footer); // 下タブと重ならないよう、出典は「データ」シートの末尾へ
+  } else {
+    views.forEach((v) => panel.append(v));
+    document.body.append(footer);
+  }
+  map.resize();
+}
+
 function selectTab(name) {
   document.querySelectorAll('.tab').forEach((t) => {
     const on = t.id === `tab-${name}`;
@@ -437,7 +459,9 @@ function buildTabs() {
     t.addEventListener('click', () => selectTab(t.id.replace('tab-', '')));
     t.addEventListener('keydown', (e) => {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      const shown = tabs.filter((x) => x.offsetParent !== null); // PCでは「地図」タブは非表示
+      const at = shown.indexOf(t);
+      const next = shown[(at + (e.key === 'ArrowRight' ? 1 : shown.length - 1)) % shown.length];
       next.focus();
       selectTab(next.id.replace('tab-', ''));
     });
@@ -515,6 +539,12 @@ function buildDataTable() {
 function init() {
   $('official-link').href = OFFICIAL_HAZARD_URL;
   buildTabs();
+  placeSheets();
+  selectTab(isMobile() ? 'map' : 'nearby');
+  mobileMq.addEventListener('change', () => {
+    placeSheets();
+    if (!isMobile() && document.getElementById('tab-map').getAttribute('aria-selected') === 'true') selectTab('nearby');
+  });
   $('search-form').addEventListener('submit', onSearch);
   $('locate-btn').addEventListener('click', onLocate);
   $('radius').addEventListener('change', renderNearby);
@@ -522,6 +552,7 @@ function init() {
     const c = map.getCenter();
     setPin([c.lng, c.lat], { fly: false });
     setStatus('地図の中心にピンを置きました。ピンはドラッグで動かせます。');
+    if (isMobile()) selectTab('map');
   });
 }
 

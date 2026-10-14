@@ -147,6 +147,17 @@ function openPopup(layerId, feature) {
     .addTo(map);
 }
 
+// queryRenderedFeatures は配列・オブジェクトの属性を JSON 文字列にして返すため、元に戻す
+function restoreProps(props) {
+  const out = { ...props };
+  ['details', 'services'].forEach((key) => {
+    if (typeof out[key] === 'string') {
+      try { out[key] = JSON.parse(out[key]); } catch { delete out[key]; }
+    }
+  });
+  return out;
+}
+
 function bindMapClicks() {
   const ids = LAYERS.map((l) => `pt-${l.id}`);
   map.on('click', (e) => {
@@ -154,7 +165,7 @@ function bindMapClicks() {
     if (hits.length) {
       const h = hits[0];
       const layerId = h.layer.id.replace(/^pt-/, '');
-      openPopup(layerId, { geometry: h.geometry, properties: h.properties, type: 'Feature' });
+      openPopup(layerId, { geometry: h.geometry, properties: restoreProps(h.properties), type: 'Feature' });
     }
   });
   map.on('mousemove', (e) => {

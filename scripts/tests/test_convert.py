@@ -71,6 +71,29 @@ class CoordTest(unittest.TestCase):
         self.assertIsNotNone(c.parse_coord("３７.６", "１３８.９６")[0])
 
 
+class MuniTest(unittest.TestCase):
+    def test_neighbor_is_inside(self):
+        key = c.coord_key(37.5297, 138.9136)
+        coord, reason = c.parse_coord("37.5297", "138.9136", {key: "15211"})  # 見附市
+        self.assertIsNotNone(coord)
+        self.assertIsNone(reason)
+
+    def test_non_neighbor_in_bbox_is_flagged(self):
+        key = c.coord_key(37.45, 138.80)
+        coord, reason = c.parse_coord("37.45", "138.80", {key: "15208"})  # 小千谷市
+        self.assertIsNone(coord)
+        self.assertIn("隣接自治体の範囲外", reason)
+
+    def test_outside_japan_code_is_flagged(self):
+        key = c.coord_key(37.5, 139.0)
+        coord, reason = c.parse_coord("37.5", "139.0", {key: ""})
+        self.assertIsNone(coord)
+
+    def test_fallback_to_bbox_without_cache(self):
+        self.assertIsNotNone(c.parse_coord("37.6", "138.9", {})[0])
+        self.assertEqual(c.parse_coord("35.7", "139.6", {})[1], "三条市周辺の範囲外")
+
+
 class WarekiTest(unittest.TestCase):
     def test_convert(self):
         self.assertEqual(c.wareki_to_iso("R7.4.7"), "2025-04-07")

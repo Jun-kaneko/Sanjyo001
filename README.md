@@ -25,6 +25,7 @@
 ```bash
 npm install
 python3 scripts/fetch.py      # CSV を取得（data/raw/ に保存。失敗時は既存を保持）
+python3 scripts/lookup_muni.py  # 座標の自治体コードを取得（data/geo/muni-cache.json。新しい座標だけ問い合わせ）
 python3 scripts/convert.py    # CSV → GeoJSON（public/data/）。何度実行しても同じ結果
 npm run dev                   # 開発サーバー
 npm run build                 # dist/ に出力
@@ -35,7 +36,7 @@ npm test                      # 変換スクリプトのテスト
 
 - 文字コードは自動判定（CP932 / UTF-8 / BOM付きUTF-8）。2行ヘッダーと公衆トイレの別形式に対応
 - 全角数字は半角に統一
-- 座標なし・範囲外・形式不正の行は出力せず、`docs/convert-log.md` と `docs/coord-issues.md` に記録（推測補完はしない）
+- 座標が「三条市および隣接自治体（新潟市南区・長岡市・燕市・五泉市・魚沼市・見附市・加茂市・阿賀町・田上町・只見町）」の外にある行、座標なし・形式不正の行は出力せず、`docs/convert-log.md` と `docs/coord-issues.md` に記録（推測補完はしない）
 - 介護サービス施設は名称＋座標で集約し、サービス名を併記
 - クマ出没の和暦日付（`R7.4.7`）は西暦（`2025-04-07`）へ変換
 - 取得日は `data/raw/fetch-log.json` に記録。内容が変わったときだけ更新される

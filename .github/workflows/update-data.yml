@@ -26,6 +26,11 @@ jobs:
         continue-on-error: true
         run: python3 scripts/fetch.py
 
+      # 新しい座標だけ自治体コードを調べる（失敗しても矩形範囲での判定に切り替わるため続行）
+      - name: 座標の自治体コードを更新
+        continue-on-error: true
+        run: python3 scripts/lookup_muni.py
+
       - name: GeoJSON を再生成
         run: python3 scripts/convert.py
 
@@ -44,6 +49,7 @@ jobs:
             座標の除外が増えていないかは `docs/convert-log.md` で確認できます。
           add-paths: |
             data/raw/**
+            data/geo/**
             public/data/**
             docs/convert-log.md
             docs/coord-issues.md

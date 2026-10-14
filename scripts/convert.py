@@ -26,6 +26,24 @@ SOURCE_BASE = "https://www.city.sanjo.niigata.jp/material/files/group/3/"
 LAT_RANGE = (37.40, 37.80)
 LON_RANGE = (138.75, 139.30)
 
+# 座標の妥当性は「三条市および隣接自治体の内側にあるか」で判定する。
+# 自治体コードは国土地理院の逆ジオコーダ（scripts/lookup_muni.py が data/geo/muni-cache.json に保存）で得る。
+# 隣接自治体は Wikipedia「三条市」の隣接欄に基づく（田上町は地理的隣接のため追加。田上町のコードは API では未実測）。
+ALLOWED_MUNI = {
+    "15204": "三条市",
+    "15106": "新潟市南区",
+    "15202": "長岡市",
+    "15213": "燕市",
+    "15218": "五泉市",
+    "15225": "魚沼市",
+    "15211": "見附市",
+    "15209": "加茂市",
+    "15385": "阿賀町",
+    "15342": "田上町",
+    "07367": "只見町",
+}
+MUNI_CACHE_PATH = ROOT / "data" / "geo" / "muni-cache.json"
+
 MISSING_VALUES = {"", "-", "－", "ー", "―"}
 _FULLWIDTH_DIGITS = str.maketrans("０１２３４５６７８９", "0123456789")
 
@@ -124,8 +142,21 @@ def parse_rows(text):
     return header, records
 
 
-def parse_coord(lat_raw, lon_raw):
-    """緯度経度の文字列を検証して (lat, lon) を返す。不正なら (None, 理由)。"""
+def coord_key(lat, lon):
+    return f"{lat:.6f},{lon:.6f}"
+
+
+def load_muni_cache(path=MUNI_CACHE_PATH):
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    return {}
+
+
+def parse_coord(lat_raw, lon_raw, muni=None):
+    """緯度経度の文字列を検証して (lat, lon) を返す。不正なら (None, 理由)。
+
+    muni: {"緯度,経度": 自治体コード} のキャッシュ。ある座標は自治体で判定し、
+    無い座標は従来の矩形範囲で判定する。"""
     lat_s, lon_s = clean(lat_raw), clean(lon_raw)
     if lat_s in MISSING_VALUES or lon_s in MISSING_VALUES:
         return None, "座標なし"
@@ -133,6 +164,11 @@ def parse_coord(lat_raw, lon_raw):
         lat, lon = float(lat_s), float(lon_s)
     except ValueError:
         return None, f"座標の形式不正 ({lat_s!r}, {lon_s!r})"
+    code = (muni or {}).get(coord_key(lat, lon))
+    if code is not None:
+        if code in ALLOWED_MUNI:
+            return (lat, lon), None
+        return None, f"三条市・隣接自治体の範囲外（自治体コード {code or '不明'}）"
     if not (LAT_RANGE[0] <= lat <= LAT_RANGE[1] and LON_RANGE[0] <= lon <= LON_RANGE[1]):
         return None, "三条市周辺の範囲外"
     return (lat, lon), None
@@ -187,7 +223,7 @@ def build_feature(spec, rec, coord):
             "properties": props}
 
 
-def convert_layer(layer_id, text):
+def convert_layer(layer_id, text, muni=None):
     """CSV 文字列を変換し (features, 件数, 除外リスト) を返す。"""
     spec = LAYERS[layer_id]
     _, records = parse_rows(text)
@@ -196,7 +232,7 @@ def convert_layer(layer_id, text):
     features, excluded = [], []
     groups = {}
     for i, rec in enumerate(records, start=1):
-        coord, reason = parse_coord(rec.get(lat_col, ""), rec.get(lon_col, ""))
+        coord, reason = parse_coord(rec.get(lat_col, ""), rec.get(lon_col, ""), muni)
         label = clean(rec.get(spec["name"], ""))
         if coord is None:
             excluded.append({"row": i, "name": label, "reason": reason,
@@ -235,8 +271,10 @@ def write_docs(all_excluded, log_lines):
     DOCS_DIR.mkdir(exist_ok=True)
     lines = ["# 座標の異常候補（三条市への報告用）", "",
              "`scripts/convert.py` が自動生成します（手編集しないでください）。",
-             f"範囲: 北緯{LAT_RANGE[0]}〜{LAT_RANGE[1]} / 東経{LON_RANGE[0]}〜{LON_RANGE[1]}。"
-             "範囲外・欠損の行は地図に出していません。クマ出没の「座標なし」は件数が多いため集計のみ載せます。",
+             "座標が三条市および隣接自治体（" + "・".join(ALLOWED_MUNI.values()) + "）の外にある行、"
+             "形式不正の行を載せています（自治体は国土地理院の逆ジオコーダで判定。未判定の座標は"
+             f"北緯{LAT_RANGE[0]}〜{LAT_RANGE[1]} / 東経{LON_RANGE[0]}〜{LON_RANGE[1]} の矩形で判定）。"
+             "これらの行は地図に出していません。クマ出没の「座標なし」は件数が多いため集計のみ載せます。",
              "", "| データ | 行 | 名称/地区 | 緯度 | 経度 | 住所 | 理由 |",
              "|---|---|---|---|---|---|---|"]
     for layer_id, items in all_excluded.items():
@@ -256,6 +294,7 @@ def write_docs(all_excluded, log_lines):
 def main():
     fetch_log_path = RAW_DIR / "fetch-log.json"
     fetch_log = json.loads(fetch_log_path.read_text(encoding="utf-8")) if fetch_log_path.exists() else {}
+    muni = load_muni_cache()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     manifest, all_excluded, log_lines = {}, {}, []
     status = 0
@@ -266,7 +305,7 @@ def main():
             status = 1
             continue
         text, enc, _ = decode_bytes(path.read_bytes())
-        features, total, excluded = convert_layer(layer_id, text)
+        features, total, excluded = convert_layer(layer_id, text, muni)
         dump_json(OUT_DIR / f"{layer_id}.geojson",
                   {"type": "FeatureCollection", "features": features})
         reasons = {}

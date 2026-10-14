@@ -1,0 +1,142 @@
+"""変換スクリプトのテスト。実行: python3 -m unittest discover -s scripts/tests"""
+import json
+import sys
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import convert as c  # noqa: E402
+
+RAW = Path(__file__).resolve().parents[2] / "data" / "raw"
+
+
+class DecodeTest(unittest.TestCase):
+    def test_cp932(self):
+        text, enc, bom = c.decode_bytes("名称,緯度\n三条,37.6".encode("cp932"))
+        self.assertEqual(enc, "cp932")
+        self.assertIn("三条", text)
+        self.assertFalse(bom)
+
+    def test_utf8_bom(self):
+        text, enc, bom = c.decode_bytes("﻿名称".encode("utf-8"))
+        self.assertEqual(enc, "utf-8-sig")
+        self.assertTrue(bom)
+        self.assertEqual(text, "名称")
+
+    def test_utf8_plain(self):
+        text, enc, bom = c.decode_bytes("名称,緯度".encode("utf-8"))
+        self.assertEqual(text, "名称,緯度")
+        self.assertFalse(bom)
+
+
+class ParseTest(unittest.TestCase):
+    def test_two_row_header(self):
+        header, recs = c.parse_rows("項目No.,1,2\n項目名,名称,緯度\n,A,37.6\n")
+        self.assertEqual(header, ["項目名", "名称", "緯度"])
+        self.assertEqual(recs[0]["名称"], "A")
+
+    def test_single_header_and_trailing_empty_columns(self):
+        header, recs = c.parse_rows("name,latitude,,\nA,37.6,,\n,,,\n")
+        self.assertEqual(header, ["name", "latitude"])
+        self.assertEqual(len(recs), 1)
+
+    def test_fullwidth_digits(self):
+        self.assertEqual(c.clean(" 三条市１丁目２３ "), "三条市1丁目23")
+
+
+class CoordTest(unittest.TestCase):
+    def test_ok(self):
+        self.assertEqual(c.parse_coord("37.636", "138.96")[0], (37.636, 138.96))
+
+    def test_missing(self):
+        for v in ("", "-", "－"):
+            self.assertEqual(c.parse_coord(v, v), (None, "座標なし"))
+
+    def test_out_of_range(self):
+        self.assertEqual(c.parse_coord("35.7", "139.6")[1], "三条市周辺の範囲外")
+        self.assertEqual(c.parse_coord("40.66", "140.56")[1], "三条市周辺の範囲外")
+
+    def test_southern_sanjo_is_kept(self):
+        self.assertIsNotNone(c.parse_coord("37.45", "139.12")[0])
+
+    def test_swapped_is_rejected(self):
+        self.assertIsNone(c.parse_coord("138.96", "37.63")[0])
+
+    def test_malformed_not_guessed(self):
+        coord, reason = c.parse_coord("37.65852218473639,", "138.95")
+        self.assertIsNone(coord)
+        self.assertIn("形式不正", reason)
+
+    def test_fullwidth(self):
+        self.assertIsNotNone(c.parse_coord("３７.６", "１３８.９６")[0])
+
+
+class WarekiTest(unittest.TestCase):
+    def test_convert(self):
+        self.assertEqual(c.wareki_to_iso("R7.4.7"), "2025-04-07")
+        self.assertEqual(c.wareki_to_iso("R8.3.28"), "2026-03-28")
+        self.assertEqual(c.wareki_to_iso("令和7年10月10日"), "2025-10-10")
+
+    def test_invalid(self):
+        self.assertIsNone(c.wareki_to_iso("不明"))
+        self.assertIsNone(c.wareki_to_iso("R7.13.1"))
+
+
+class LayerTest(unittest.TestCase):
+    def test_toilet_format(self):
+        csv_text = ("category,name,latitude,longitude,address\n"
+                    "三条市上野原,公衆トイレ,37.621033,139.003894,三条市上野原 大崎山公園脇\n")
+        feats, total, excl = c.convert_layer("toilet", csv_text)
+        self.assertEqual((total, len(feats), len(excl)), (1, 1, 0))
+        self.assertEqual(feats[0]["properties"]["name"], "公衆トイレ")
+        self.assertEqual(feats[0]["geometry"]["coordinates"], [139.003894, 37.621033])
+
+    def test_missing_rows_are_reported_not_output(self):
+        csv_text = ("項目No.,1\n項目名,地区,緯度,経度,月日,時間,痕跡／目撃／事故,山間部／居住区,種別\n"
+                    ",広手,37.5,138.98,R7.4.7,午後１時頃,痕跡,山間部,クマ\n"
+                    ",荒沢,-,-,R7.5.23,午前9時頃,痕跡,山間部,クマ\n")
+        feats, total, excl = c.convert_layer("bear", csv_text)
+        self.assertEqual((total, len(feats), len(excl)), (2, 1, 1))
+        self.assertEqual(excl[0]["reason"], "座標なし")
+        self.assertEqual(feats[0]["properties"]["date"], "2025-04-07")
+
+    def test_care_grouping(self):
+        head = "項目名,介護サービス事業所名称,実施サービス,住所,緯度,経度,電話番号,備考\n"
+        csv_text = ("項目No.,1\n" + head +
+                    ",あすも,訪問看護,東裏館,37.6,138.96,-,-\n"
+                    ",あすも,居宅介護支援,東裏館,37.6,138.96,-,-\n"
+                    ",別施設,訪問介護,旭町,37.61,138.97,-,-\n")
+        feats, total, _ = c.convert_layer("care", csv_text)
+        self.assertEqual((total, len(feats)), (3, 2))
+        self.assertEqual(feats[0]["properties"]["services"], ["訪問看護", "居宅介護支援"])
+
+    def test_unsafe_url_dropped(self):
+        csv_text = ("項目No.,1\n項目名,名称,種別,住所,緯度,経度,電話番号,URL\n"
+                    ",A,B,addr,37.6,138.96,-,javascript:alert(1)\n")
+        feats, _, _ = c.convert_layer("childcare", csv_text)
+        self.assertNotIn("url", feats[0]["properties"])
+
+
+@unittest.skipUnless((RAW / "000114890.csv").exists(), "data/raw がありません")
+class RealDataTest(unittest.TestCase):
+    def test_all_layers_convert_and_in_range(self):
+        for layer_id, spec in c.LAYERS.items():
+            text, _, _ = c.decode_bytes((RAW / spec["file"]).read_bytes())
+            feats, total, excl = c.convert_layer(layer_id, text)
+            self.assertGreater(len(feats), 0, layer_id)
+            if not spec.get("group"):
+                self.assertEqual(len(feats) + len(excl), total, layer_id)
+            for f in feats:
+                lon, lat = f["geometry"]["coordinates"]
+                self.assertTrue(c.LAT_RANGE[0] <= lat <= c.LAT_RANGE[1], layer_id)
+                self.assertTrue(c.LON_RANGE[0] <= lon <= c.LON_RANGE[1], layer_id)
+
+    def test_idempotent_json(self):
+        text, _, _ = c.decode_bytes((RAW / "000114890.csv").read_bytes())
+        a = json.dumps(c.convert_layer("shelter", text)[0], sort_keys=True)
+        b = json.dumps(c.convert_layer("shelter", text)[0], sort_keys=True)
+        self.assertEqual(a, b)
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,58 @@
+name: オープンデータ更新
+
+# 週1回、三条市のCSVを再取得して GeoJSON を再生成し、差分があれば PR を作る
+on:
+  schedule:
+    - cron: '0 20 * * 0' # 毎週月曜 5:00 (JST)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # 取得に失敗したファイルは既存のまま残る（scripts/fetch.py の仕様）
+      - name: CSV を取得
+        id: fetch
+        continue-on-error: true
+        run: python3 scripts/fetch.py
+
+      - name: GeoJSON を再生成
+        run: python3 scripts/convert.py
+
+      - name: テスト
+        run: python3 -m unittest discover -s scripts/tests
+
+      - name: 差分があれば PR を作成
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: bot/update-open-data
+          delete-branch: true
+          commit-message: 'データ更新: 三条市オープンデータを再取得'
+          title: 'データ更新: 三条市オープンデータ'
+          body: |
+            週次の自動更新です。`data/raw/`・`public/data/`・`docs/` の差分を確認してから取り込んでください。
+            座標の除外が増えていないかは `docs/convert-log.md` で確認できます。
+          add-paths: |
+            data/raw/**
+            public/data/**
+            docs/convert-log.md
+            docs/coord-issues.md
+
+      - name: 取得失敗を Issue で通知
+        if: steps.fetch.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "オープンデータの取得に失敗しました ($(date -u +%F))" \
+            --body "週次更新で一部のCSVを取得できませんでした。既存データはそのまま残しています。ログ: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"

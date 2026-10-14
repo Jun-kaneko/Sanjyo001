@@ -59,6 +59,10 @@
         <h2 class="h2">施設・出没情報</h2>
         <ul id="layer-toggles" class="toggle-list"></ul>
 
+        <h2 class="h2">地区別の人口（塗り分け）</h2>
+        <div id="district-modes" class="radio-list" role="radiogroup" aria-label="地区別の人口の塗り分け"></div>
+        <p class="note" id="district-note"></p>
+
         <h2 class="h2">クマ出没の期間</h2>
         <p class="note" id="bear-note"></p>
         <div class="date-range">
@@ -105,6 +109,7 @@
     </section>
 
     <section class="map-wrap" aria-label="地図">
+      <div id="map-legend" class="map-legend" hidden></div>
       <div id="map" role="application" aria-label="三条市の地図。ピンや施設はリストからも選べます"></div>
       <noscript><p class="status">この地図の表示には JavaScript が必要です。</p></noscript>
     </section>
@@ -119,7 +124,7 @@
     <details>
       <summary>加工・出典の詳細</summary>
       <p>
-        三条市が公開するCSVを、地図表示用に変換・加工して掲載しています（座標のない行・範囲外の行の除外、全角数字の半角化、事業所単位への集約、和暦の西暦化、文化財の住所から町丁目の代表点への配置）。
+        三条市が公開するCSVを、地図表示用に変換・加工して掲載しています（座標のない行・範囲外の行の除外、全角数字の半角化、事業所単位への集約、和暦の西暦化、文化財の住所から町丁目の代表点への配置、行政区別人口の区域への結合）。
       </p>
       <p>
         地図: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer">地理院タイル</a>（国土地理院）／

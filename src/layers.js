@@ -32,3 +32,12 @@ export const HAZARDS = [
 
 export const OFFICIAL_HAZARD_URL =
   'https://www.city.sanjo.niigata.jp/bosai_bohan/bosai/higoronosonae/gaidomappuhazzardmap/index.html';
+
+// 行政区別人口の塗り分け。区切りは表示時にデータの分位から求める（5段階・単色系列）
+export const DISTRICT_MODES = [
+  { id: 'off', label: '表示しない' },
+  { id: 'population', label: '人口', prop: 'population', unit: '人' },
+  { id: 'households', label: '世帯数', prop: 'households', unit: '世帯' },
+  { id: 'density', label: '人口密度', prop: 'density', unit: '人/km²' },
+];
+export const DISTRICT_COLORS = ['#f1eef6', '#bdc9e1', '#74a9cf', '#2b8cbe', '#045a8d'];

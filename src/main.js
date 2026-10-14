@@ -1,7 +1,7 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './style.css';
-import { LAYERS, HAZARDS, OFFICIAL_HAZARD_URL } from './layers.js';
+import { LAYERS, HAZARDS, OFFICIAL_HAZARD_URL, DISTRICT_MODES, DISTRICT_COLORS } from './layers.js';
 import { iconImageData, iconDataUrl } from './icons.js';
 import { distanceM, formatDistance, bearingLabel, geocode } from './geo.js';
 
@@ -17,6 +17,8 @@ const state = {
   bearTo: '',
   popup: null,
   manifest: {},
+  districts: null, // 行政区別人口の FeatureCollection
+  districtMode: 'off',
 };
 
 const layerById = Object.fromEntries(LAYERS.map((l) => [l.id, l]));
@@ -74,7 +76,17 @@ async function loadData() {
     return r.json();
   });
   state.manifest = await get('manifest.json');
-  const collections = await Promise.all(LAYERS.map((l) => get(`${l.id}.geojson`)));
+  const [collections, districts] = await Promise.all([
+    Promise.all(LAYERS.map((l) => get(`${l.id}.geojson`))),
+    get('districts.geojson'),
+  ]);
+  // 区域の塗り分け（点アイコンより下に描く）
+  state.districts = districts;
+  map.addSource('districts', { type: 'geojson', data: districts });
+  map.addLayer({ id: 'districts-fill', type: 'fill', source: 'districts',
+    paint: { 'fill-color': DISTRICT_COLORS[2], 'fill-opacity': 0.55 }, layout: { visibility: 'none' } });
+  map.addLayer({ id: 'districts-line', type: 'line', source: 'districts',
+    paint: { 'line-color': '#1f3a5f', 'line-width': 0.8, 'line-opacity': 0.6 }, layout: { visibility: 'none' } });
   // 点の多いレイヤー（消火栓など）を先に追加して、他のアイコンの下に描く
   const order = LAYERS.map((l, i) => ({ l, fc: collections[i] }))
     .sort((a, b) => Number(Boolean(b.l.minzoom)) - Number(Boolean(a.l.minzoom)));
@@ -100,6 +112,80 @@ function setLayerVisible(id, on) {
   state.visible[id] = on;
   if (map.getLayer(`pt-${id}`)) map.setLayoutProperty(`pt-${id}`, 'visibility', on ? 'visible' : 'none');
   renderNearby();
+}
+
+// ---------- 地区別の人口（塗り分け） ----------
+const numFmt = new Intl.NumberFormat('ja-JP');
+
+function niceRound(v) {
+  if (v < 10) return Math.round(v * 10) / 10;
+  const k = 10 ** (Math.floor(Math.log10(v)) - 1);
+  return Math.round(v / k) * k;
+}
+
+function districtBreaks(prop) {
+  const vals = state.districts.features
+    .map((f) => f.properties[prop]).filter((v) => typeof v === 'number').sort((a, b) => a - b);
+  const raw = [0.2, 0.4, 0.6, 0.8].map((q) => niceRound(vals[Math.floor(q * vals.length)]));
+  return raw.filter((v, i) => i === 0 || v > raw[i - 1]);
+}
+
+function applyDistrictMode(id) {
+  state.districtMode = id;
+  const mode = DISTRICT_MODES.find((m) => m.id === id);
+  const legend = $('map-legend');
+  const on = Boolean(mode.prop);
+  ['districts-fill', 'districts-line'].forEach((l) => map.setLayoutProperty(l, 'visibility', on ? 'visible' : 'none'));
+  if (!on) { legend.hidden = true; return; }
+  const breaks = districtBreaks(mode.prop);
+  const expr = ['step', ['coalesce', ['get', mode.prop], 0], DISTRICT_COLORS[0]];
+  breaks.forEach((b, i) => expr.push(b, DISTRICT_COLORS[i + 1]));
+  map.setPaintProperty('districts-fill', 'fill-color', expr);
+  const fmt = (v) => numFmt.format(v);
+  const labels = [`${fmt(breaks[0])} 未満`,
+    ...breaks.slice(1).map((b, i) => `${fmt(breaks[i])} 〜 ${fmt(b)} 未満`),
+    `${fmt(breaks[breaks.length - 1])} 以上`];
+  legend.replaceChildren(
+    el('h3', {}, `${mode.label}（${mode.unit}）`),
+    ...labels.map((t, i) => el('div', { class: 'legend-row' },
+      el('span', { class: 'legend-swatch', style: `background:${DISTRICT_COLORS[i]}` }), t)),
+    el('div', { class: 'legend-row' }, '区域は令和2年国勢調査'));
+  legend.hidden = false;
+}
+
+function buildDistrictControls() {
+  const box = $('district-modes');
+  DISTRICT_MODES.forEach((m) => {
+    const input = el('input', { type: 'radio', name: 'district-mode', value: m.id });
+    input.checked = m.id === 'off';
+    input.addEventListener('change', () => applyDistrictMode(m.id));
+    box.append(el('label', {}, input, m.label));
+  });
+  const m = state.manifest.districts;
+  $('district-note').textContent = m
+    ? `行政区のうち ${m.count} 地区（人口の ${Math.round((m.population / m.populationAll) * 100)}%）を、令和2年国勢調査の区域に重ねて表示します。`
+      + `人口は ${m.fetchedAt || ''} 取得の三条市データです。区域の変更や表記の違いで対応できない地区、新興住宅地などは正確に表せない場合があります。人口密度は区域の面積（水面等を含む）で計算しています。`
+    : '';
+}
+
+function districtPopupContent(p) {
+  const root = el('div', { class: 'popup' });
+  root.append(el('p', { class: 'popup-cat' }, '行政区（地区別人口）'));
+  root.append(el('h3', { class: 'popup-title' }, p.name));
+  const rows = [
+    ['人口', `${numFmt.format(p.population)} 人（男 ${numFmt.format(p.male)}・女 ${numFmt.format(p.female)}）`],
+    ['世帯数', `${numFmt.format(p.households)} 世帯`],
+  ];
+  if (p.hh_size) rows.push(['1世帯あたり', `${p.hh_size} 人`]);
+  if (p.density != null) rows.push(['人口密度', `${numFmt.format(p.density)} 人/km²（区域 ${p.area_km2} km²）`]);
+  const dl = el('dl', { class: 'popup-dl' });
+  rows.forEach(([k, v]) => dl.append(el('dt', {}, k), el('dd', {}, v)));
+  root.append(dl);
+  if (p.matched_as) {
+    root.append(el('p', { class: 'popup-warn' }, `「${p.matched_as}」の区域に対応させています（名称が異なるため推定）。`));
+  }
+  root.append(el('p', { class: 'popup-warn' }, '区域は令和2年国勢調査、人口は三条市の行政区別データです。時点や区域が一致しない場合があります。'));
+  return root;
 }
 
 // ---------- ポップアップ ----------
@@ -186,6 +272,15 @@ function bindMapClicks() {
         && x.geometry.coordinates[1] === h.geometry.coordinates[1])
         .map((x) => ({ geometry: x.geometry, properties: restoreProps(x.properties), type: 'Feature' }));
       openPopup(layerId, same[0], same);
+      return;
+    }
+    if (state.districtMode !== 'off') {
+      const d = map.queryRenderedFeatures(e.point, { layers: ['districts-fill'] });
+      if (d.length) {
+        state.popup?.remove();
+        state.popup = new maplibregl.Popup({ maxWidth: '320px', focusAfterOpen: true })
+          .setLngLat(e.lngLat).setDOMContent(districtPopupContent(d[0].properties)).addTo(map);
+      }
     }
   });
   map.on('mousemove', (e) => {
@@ -400,6 +495,12 @@ function buildBearControls() {
 
 function buildDataTable() {
   const body = $('data-table-body');
+  const dm = state.manifest.districts;
+  if (dm) {
+    body.append(el('tr', {}, el('th', { scope: 'row' }, '行政区別人口'),
+      el('td', {}, dm.fetchedAt || '不明'),
+      el('td', {}, `${dm.count}地区（対応なし ${dm.excluded}）`)));
+  }
   LAYERS.forEach((l) => {
     const m = state.manifest[l.id];
     if (!m) return;
@@ -437,6 +538,7 @@ map.on('load', async () => {
   }
   buildToggles();
   buildBearControls();
+  buildDistrictControls();
   buildDataTable();
   bindMapClicks();
   renderNearby();

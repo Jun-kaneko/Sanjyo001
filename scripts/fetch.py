@@ -18,6 +18,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from convert import LAYERS, RAW_DIR, SOURCE_BASE, decode_bytes, parse_rows  # noqa: E402
 
+# 地図の点ではなく、区域に結合して使うデータ
+EXTRA_FILES = {"districts": {"file": "000114894.csv", "required": ["行政区名", "人口(総数)"]}}
 USER_AGENT = "sanjo-uchinochikaku-map/1.0 (open data fetch; weekly)"
 MIN_BYTES = 200
 
@@ -42,8 +44,8 @@ def validate(data, spec):
         raise ValueError(f"ファイルが小さすぎます ({len(data)} bytes)")
     text, _, _ = decode_bytes(data)
     header, records = parse_rows(text)
-    # 座標のないデータ（geocode 指定）は住所列で検証する
-    needed = [spec["address"]] if spec.get("geocode") else None
+    # 座標のないデータ（geocode 指定・区域データ）は必須列で検証する
+    needed = spec.get("required") or ([spec["address"]] if spec.get("geocode") else None)
     if needed:
         if not all(n in header for n in needed):
             raise ValueError(f"{needed} の列が見つかりません")
@@ -59,7 +61,7 @@ def main():
     log = json.loads(log_path.read_text(encoding="utf-8")) if log_path.exists() else {}
     today = date.today().isoformat()
     failures = []
-    for layer_id, spec in LAYERS.items():
+    for layer_id, spec in {**LAYERS, **EXTRA_FILES}.items():
         name = spec["file"]
         url = SOURCE_BASE + name
         try:

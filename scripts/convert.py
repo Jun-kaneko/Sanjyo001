@@ -334,7 +334,7 @@ def dump_json(path, obj):
                                separators=(",", ":")) + "\n", encoding="utf-8")
 
 
-def write_docs(all_excluded, log_lines):
+def write_docs(all_excluded, log_lines, d_unmatched=(), d_unused=()):
     DOCS_DIR.mkdir(exist_ok=True)
     lines = ["# 座標の異常候補（三条市への報告用）", "",
              "`scripts/convert.py` が自動生成します（手編集しないでください）。",
@@ -355,7 +355,11 @@ def write_docs(all_excluded, log_lines):
     (DOCS_DIR / "convert-log.md").write_text(
         "# 変換ログ\n\n`scripts/convert.py` が自動生成します。\n\n"
         "| レイヤー | 入力行 | 出力 | 除外 | 内訳 |\n|---|---|---|---|---|\n"
-        + "\n".join(log_lines) + "\n", encoding="utf-8")
+        + "\n".join(log_lines) + "\n"
+        + "\n## 行政区別人口: 面が見つからなかった行政区\n\n"
+        + "\n".join(f"- {u['code']} {u['name']}（人口 {u['population']}・世帯 {u['households']}）" for u in d_unmatched)
+        + "\n\n## 行政区に対応しなかった国勢調査の小地域（人口の多いものは要確認）\n\n"
+        + "、".join(d_unused) + "\n", encoding="utf-8")
 
 
 def main():
@@ -391,8 +395,14 @@ def main():
             entry["dateRange"] = [dates[0], dates[-1]] if dates else None
             entry["totalReports"] = total
         manifest[layer_id] = entry
+    # 行政区別人口（境界データと結合して区域を塗り分ける）
+    import districts
+    d_entry, d_log, d_unmatched, d_unused = districts.run(RAW_DIR, OUT_DIR, fetch_log)
+    manifest["districts"] = d_entry
+    log_lines += d_log
+    print(f"districts  行政区 {d_entry['count']}件を結合、面なし {d_entry['excluded']}件")
     dump_json(OUT_DIR / "manifest.json", manifest)
-    write_docs(all_excluded, log_lines)
+    write_docs(all_excluded, log_lines, d_unmatched, d_unused)
     return status
 
 

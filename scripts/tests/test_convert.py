@@ -120,6 +120,61 @@ class GeocodeTest(unittest.TestCase):
                          sorted(["住所が町丁目まで絞れない", "住所から位置を特定できない"]))
 
 
+class DistrictsTest(unittest.TestCase):
+    def setUp(self):
+        import districts
+        self.d = districts
+
+    def test_normalize(self):
+        n = self.d.normalize_name
+        self.assertEqual(n("本町1丁目"), n("本町一丁目"))
+        self.assertEqual(n("東裏館３丁目"), "東裏館三丁目")
+        self.assertEqual(n("石上10丁目"), "石上十丁目")
+        self.assertEqual(n("牛ケ島"), n("牛ヶ島"))
+
+    def test_rings_outer_and_hole(self):
+        outer = [(0, 0), (0, 10), (10, 10), (10, 0), (0, 0)]          # 時計回り
+        hole = [(2, 2), (8, 2), (8, 8), (2, 8), (2, 2)]               # 反時計回り
+        polys = self.d.rings_to_polygons([outer, hole, [(20, 0), (20, 1), (21, 1), (21, 0), (20, 0)]])
+        self.assertEqual(len(polys), 2)
+        self.assertEqual(len(polys[0]), 2)
+
+    def test_build_with_alias_merge_and_unmatched(self):
+        sq = [[(0, 0), (0, 1), (1, 1), (1, 0), (0, 0)]]
+        areas = {
+            self.d.normalize_name("本町一丁目"): {"polygons": [sq], "area_m2": 50000.0},
+            self.d.normalize_name("北野新田"): {"polygons": [sq, sq], "area_m2": 200000.0},
+        }
+        recs = [
+            {"行政区コード": "", "行政区名": "総数", "世帯数": "10", "人口(総数)": "300", "人口(男)": "1", "人口(女)": "1"},
+            {"行政区コード": "1001", "行政区名": "本町1丁目", "世帯数": "75", "人口(総数)": "137", "人口(男)": "68", "人口(女)": "69"},
+            {"行政区コード": "65000", "行政区名": "北野", "世帯数": "14", "人口(総数)": "43", "人口(男)": "19", "人口(女)": "24"},
+            {"行政区コード": "9", "行政区名": "どこか", "世帯数": "1", "人口(総数)": "5", "人口(男)": "2", "人口(女)": "3"},
+        ]
+        feats, unmatched, unused = self.d.build_districts(recs, areas, {"北野": ["北野新田"]})
+        self.assertEqual([f["properties"]["name"] for f in feats], ["本町1丁目", "北野"])
+        self.assertEqual(feats[0]["properties"]["density"], 2740.0)   # 137 / 0.05km2
+        self.assertEqual(feats[1]["properties"]["matched_as"], "北野新田")
+        self.assertEqual(len(feats[1]["geometry"]["coordinates"]), 2)
+        self.assertEqual([u["name"] for u in unmatched], ["どこか"])
+        self.assertEqual(unused, [])
+
+    @unittest.skipUnless(c.RAW_DIR.joinpath("boundary", "r2ka15204_shape.zip").exists(), "境界データがありません")
+    def test_real_data(self):
+        text, _, _ = c.decode_bytes((c.RAW_DIR / "000114894.csv").read_bytes())
+        _, recs = c.parse_rows(text)
+        import json
+        aliases = json.loads(self.d.ALIASES_PATH.read_text(encoding="utf-8"))
+        feats, unmatched, _ = self.d.build_districts(recs, self.d.load_areas(), aliases)
+        self.assertGreaterEqual(len(feats), 240)
+        self.assertEqual(len(feats) + len(unmatched), 254)
+        for f in feats:
+            for poly in f["geometry"]["coordinates"]:
+                for ring in poly:
+                    for x, y in ring:
+                        self.assertTrue(138.5 < x < 139.5 and 37.3 < y < 37.9)
+
+
 class WarekiTest(unittest.TestCase):
     def test_convert(self):
         self.assertEqual(c.wareki_to_iso("R7.4.7"), "2025-04-07")

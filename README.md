@@ -12,6 +12,7 @@
 - 住所検索（国土地理院 住所検索API）と現在地ボタン。ピンはドラッグで動かせます
 - 「うちの近く」パネル: ピンから半径内の施設を距離順に表示。タップで地図が移動しポップアップを開く
 - カテゴリ別の表示切替（色＋形＋文字でアイコンを区別）
+- 地区別の人口（行政区）を、人口・世帯数・人口密度で塗り分け表示（区域は令和2年国勢調査の小地域境界）
 - クマ出没箇所の表示と期間での絞り込み（※最新ではなく、座標のある一部のみ）
 - 洪水浸水想定区域（想定最大規模）・土砂災害警戒区域の重ね表示（国土地理院タイル）
 
@@ -47,7 +48,8 @@ npm test                      # 変換スクリプトのテスト
 ### ディレクトリ
 
 ```
-data/raw/        取得したままのCSV（Shift_JIS）と fetch-log.json
+data/raw/        取得したままのCSV（Shift_JIS）と fetch-log.json、boundary/（e-Stat の境界データ zip）
+data/geo/        自治体コード・住所代表点のキャッシュ、行政区の別名表（district-aliases.json）
 public/data/     変換後 GeoJSON と manifest.json
 scripts/         fetch.py / convert.py / tests/
 src/             地図UI（main.js, layers.js, icons.js, geo.js, style.css）
@@ -80,6 +82,7 @@ docs/            data-report.md（調査）, coord-issues.md, convert-log.md
 ## ライセンス・出典
 
 - 出典: [三条市オープンデータ](https://www.city.sanjo.niigata.jp/soshiki/somubu/dxsuishinka/service/4773.html)（クリエイティブ・コモンズ 表示 2.1 日本）。三条市が公開するCSVを加工して掲載しています
+- 区域: 政府統計の総合窓口(e-Stat)「令和2年国勢調査 小地域（町丁・字等別）境界データ」を加工して作成
 - 地図: 地理院タイル（国土地理院）
 - 災害情報: ハザードマップポータルサイト（国土地理院）
 

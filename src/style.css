@@ -158,3 +158,16 @@ a { color: var(--accent); }
 
 .popup-count { margin: 0 0 6px; font-weight: bold; }
 .popup-multi .popup { padding: 8px 0; border-top: 1px solid var(--line); }
+
+.radio-list { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.radio-list label { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+.radio-list input { width: 22px; height: 22px; accent-color: var(--accent); }
+.map-legend {
+  position: absolute; left: 10px; bottom: 36px; z-index: 2; max-width: 230px;
+  padding: 8px 10px; font-size: 0.82rem; line-height: 1.4;
+  background: rgba(255, 255, 255, 0.95); border: 1px solid #5b6572; border-radius: 6px;
+}
+.map-legend[hidden] { display: none; }
+.map-legend h3 { margin: 0 0 4px; font-size: 0.85rem; }
+.legend-row { display: flex; align-items: center; gap: 8px; }
+.legend-swatch { flex: none; width: 22px; height: 14px; border: 1px solid #333; }

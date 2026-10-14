@@ -83,7 +83,7 @@ async function loadData() {
       filter: l.id === 'bear' ? bearFilter() ?? true : true,
       layout: {
         'icon-image': `icon-${l.id}`,
-        'icon-size': 0.55,
+        'icon-size': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 13, 1.0, 16, 1.25],
         'icon-allow-overlap': true,
         visibility: state.visible[l.id] ? 'visible' : 'none',
       },

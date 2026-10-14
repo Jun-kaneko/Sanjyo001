@@ -147,4 +147,11 @@ a { color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 
-.legend-btn { display: inline-block; text-decoration: none; text-align: center; line-height: 1.4; padding: 10px 14px; }
+.legend-btn {
+  display: inline-block; text-decoration: none; text-align: center; line-height: 1.4;
+  padding: 10px 14px; font-size: 0.85rem; font-weight: bold;
+  color: var(--accent-fg); background: var(--accent);
+  border: 3px solid #07335a; border-radius: 8px;
+  box-shadow: 0 2px 0 #07335a;
+}
+.legend-btn:hover { filter: brightness(1.15); }

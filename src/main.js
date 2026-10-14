@@ -138,17 +138,28 @@ function popupContent(layerId, feature) {
   if (p.url) {
     root.append(el('a', { href: p.url, target: '_blank', rel: 'noopener noreferrer', class: 'popup-link' }, '詳細ページ（外部サイト）'));
   }
+  if (p.approx) {
+    root.append(el('p', { class: 'popup-warn' },
+      `位置は「${(p.located || '').replace('新潟県三条市', '')}」付近の目安で、正確な場所ではありません。住所をもとに町丁目の代表点へ配置しています。`));
+  }
   if (layerId === 'shelter') {
     root.append(el('p', { class: 'popup-warn' }, '使用可否は災害の種類や状況で変わります。避難時は三条市の避難情報を確認してください。'));
   }
   return root;
 }
 
-function openPopup(layerId, feature) {
+function openPopup(layerId, feature, sameSpot = []) {
   state.popup?.remove();
-  state.popup = new maplibregl.Popup({ maxWidth: '300px', offset: 18, focusAfterOpen: true })
+  let content = popupContent(layerId, feature);
+  if (sameSpot.length > 1) {
+    // 同じ地点に複数ある場合（町丁目の代表点に配置した文化財など）は、まとめて縦に並べる
+    content = el('div', { class: 'popup-multi' },
+      el('p', { class: 'popup-count' }, `この地点に ${sameSpot.length} 件あります`),
+      sameSpot.map((f) => popupContent(layerId, f)));
+  }
+  state.popup = new maplibregl.Popup({ maxWidth: '320px', offset: 18, focusAfterOpen: true })
     .setLngLat(feature.geometry.coordinates)
-    .setDOMContent(popupContent(layerId, feature))
+    .setDOMContent(content)
     .addTo(map);
 }
 
@@ -170,7 +181,11 @@ function bindMapClicks() {
     if (hits.length) {
       const h = hits[0];
       const layerId = h.layer.id.replace(/^pt-/, '');
-      openPopup(layerId, { geometry: h.geometry, properties: restoreProps(h.properties), type: 'Feature' });
+      const same = hits.filter((x) => x.layer.id === h.layer.id
+        && x.geometry.coordinates[0] === h.geometry.coordinates[0]
+        && x.geometry.coordinates[1] === h.geometry.coordinates[1])
+        .map((x) => ({ geometry: x.geometry, properties: restoreProps(x.properties), type: 'Feature' }));
+      openPopup(layerId, same[0], same);
     }
   });
   map.on('mousemove', (e) => {

@@ -43,6 +43,8 @@ ALLOWED_MUNI = {
     "07367": "只見町",
 }
 MUNI_CACHE_PATH = ROOT / "data" / "geo" / "muni-cache.json"
+GEOCODE_CACHE_PATH = ROOT / "data" / "geo" / "geocode-cache.json"
+CITY_PREFIX = "新潟県三条市"
 
 MISSING_VALUES = {"", "-", "－", "ー", "―"}
 _FULLWIDTH_DIGITS = str.maketrans("０１２３４５６７８９", "0123456789")
@@ -109,6 +111,13 @@ LAYERS = {
         file="000121011.csv", label="防火水槽",
         name="種別", address="住所",
         details=[("容量(立方m)", "容量(立方m)"), ("管理番号", "管理番号"), ("備考", "備考")]),
+    # 座標がなく住所が町丁目までの文化財。住所を国土地理院の住所検索で代表点に変換して配置する
+    # （scripts/lookup_geocode.py が data/geo/geocode-cache.json に保存。位置は「目安」）
+    "heritage": dict(
+        file="000102416.csv", label="文化財（位置は町丁目の目安）",
+        name="名称", address="住所", sub="種類", geocode=True,
+        details=[("分類", "文化財分類"), ("指定区分", "概要"), ("指定番号等", "説明"),
+                 ("所有者等", "所有者等"), ("指定日", "文化財指定日"), ("備考", "備考")]),
     "bear": dict(
         file="000102428.csv", label="クマ出没箇所",
         name="地区", sub="種別",
@@ -159,6 +168,27 @@ def parse_rows(text):
 
 def coord_key(lat, lon):
     return f"{lat:.6f},{lon:.6f}"
+
+
+def geocode_query(address):
+    """住所から検索用の文字列を作る。町丁目より細かく絞れない住所は None。
+
+    括弧内の補足と「ほか」「など」「地内」は除く。「三条市内」のように地点を絞れないものは対象外。"""
+    a = clean(address)
+    a = re.sub(r"[（(].*?[）)]", "", a)
+    a = re.sub(r"(ほか|など|地内)$", "", a).strip()
+    if not a.startswith(CITY_PREFIX):
+        return None
+    rest = a[len(CITY_PREFIX):]
+    if len(rest) < 2 or rest == "内":
+        return None
+    return a
+
+
+def load_geocode_cache(path=GEOCODE_CACHE_PATH):
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    return {}
 
 
 def load_muni_cache(path=MUNI_CACHE_PATH):
@@ -238,10 +268,12 @@ def build_feature(spec, rec, coord):
             "properties": props}
 
 
-def convert_layer(layer_id, text, muni=None):
+def convert_layer(layer_id, text, muni=None, geocodes=None):
     """CSV 文字列を変換し (features, 件数, 除外リスト) を返す。"""
     spec = LAYERS[layer_id]
     _, records = parse_rows(text)
+    if spec.get("geocode"):
+        return convert_geocoded(spec, records, geocodes or {})
     lat_col = "latitude" if "latitude" in (records[0] if records else {}) else "緯度"
     lon_col = "longitude" if lat_col == "latitude" else "経度"
     features, excluded = [], []
@@ -272,6 +304,26 @@ def convert_layer(layer_id, text, muni=None):
                     services.append(s)
             if services:
                 g["feature"]["properties"]["services"] = services
+    return features, len(records), excluded
+
+
+def convert_geocoded(spec, records, geocodes):
+    """座標のないデータを、住所の代表点（geocodes: 検索文字列 -> {lon, lat, title}）に配置する。"""
+    features, excluded = [], []
+    for i, rec in enumerate(records, start=1):
+        label = clean(rec.get(spec["name"], ""))
+        addr = clean(rec.get(spec["address"], ""))
+        q = geocode_query(addr)
+        hit = geocodes.get(q) if q else None
+        if not hit:
+            reason = "住所が町丁目まで絞れない" if not q else "住所から位置を特定できない"
+            excluded.append({"row": i, "name": label, "reason": reason, "lat": "", "lon": "",
+                             "address": addr})
+            continue
+        feat = build_feature(spec, rec, (hit["lat"], hit["lon"]))
+        feat["properties"]["approx"] = True
+        feat["properties"]["located"] = hit.get("title", q)
+        features.append(feat)
     return features, len(records), excluded
 
 
@@ -310,6 +362,7 @@ def main():
     fetch_log_path = RAW_DIR / "fetch-log.json"
     fetch_log = json.loads(fetch_log_path.read_text(encoding="utf-8")) if fetch_log_path.exists() else {}
     muni = load_muni_cache()
+    geocodes = load_geocode_cache()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     manifest, all_excluded, log_lines = {}, {}, []
     status = 0
@@ -320,7 +373,7 @@ def main():
             status = 1
             continue
         text, enc, _ = decode_bytes(path.read_bytes())
-        features, total, excluded = convert_layer(layer_id, text, muni)
+        features, total, excluded = convert_layer(layer_id, text, muni, geocodes)
         dump_json(OUT_DIR / f"{layer_id}.geojson",
                   {"type": "FeatureCollection", "features": features})
         reasons = {}

@@ -94,6 +94,32 @@ class MuniTest(unittest.TestCase):
         self.assertEqual(c.parse_coord("35.7", "139.6", {})[1], "三条市周辺の範囲外")
 
 
+class GeocodeTest(unittest.TestCase):
+    def test_query_cleaning(self):
+        self.assertEqual(c.geocode_query("新潟県三条市本町三丁目(三条市歴史民俗産業資料館)ほか"), "新潟県三条市本町三丁目")
+        self.assertEqual(c.geocode_query("新潟県三条市如法寺地内"), "新潟県三条市如法寺")
+        self.assertEqual(c.geocode_query("新潟県三条市帯織ほか"), "新潟県三条市帯織")
+        self.assertEqual(c.geocode_query("新潟県三条市八幡町など"), "新潟県三条市八幡町")
+
+    def test_unlocatable(self):
+        self.assertIsNone(c.geocode_query("新潟県三条市内"))
+        self.assertIsNone(c.geocode_query("新潟県三条市"))
+        self.assertIsNone(c.geocode_query("新潟県燕市吉田"))
+
+    def test_layer_uses_cache_and_marks_approx(self):
+        csv_text = ("項目No.,1\n項目名,NO,名称,文化財分類,種類,住所,所有者等,文化財指定日,概要,説明,備考\n"
+                    ",1,A像,有形文化財,彫刻,新潟県三条市中新,寺,1950/8/29,国指定,国1,-\n"
+                    ",2,B,記念物,史跡,新潟県三条市内,市,1950/8/29,市指定,市1,-\n"
+                    ",3,C,記念物,史跡,新潟県三条市不明町,市,1950/8/29,市指定,市2,-\n")
+        cache = {"新潟県三条市中新": {"lon": 138.994003, "lat": 37.610512, "title": "新潟県三条市中新"}}
+        feats, total, excl = c.convert_layer("heritage", csv_text, None, cache)
+        self.assertEqual((total, len(feats), len(excl)), (3, 1, 2))
+        self.assertTrue(feats[0]["properties"]["approx"])
+        self.assertEqual(feats[0]["geometry"]["coordinates"], [138.994003, 37.610512])
+        self.assertEqual(sorted(e["reason"] for e in excl),
+                         sorted(["住所が町丁目まで絞れない", "住所から位置を特定できない"]))
+
+
 class WarekiTest(unittest.TestCase):
     def test_convert(self):
         self.assertEqual(c.wareki_to_iso("R7.4.7"), "2025-04-07")
@@ -145,7 +171,7 @@ class RealDataTest(unittest.TestCase):
     def test_all_layers_convert_and_in_range(self):
         for layer_id, spec in c.LAYERS.items():
             text, _, _ = c.decode_bytes((RAW / spec["file"]).read_bytes())
-            feats, total, excl = c.convert_layer(layer_id, text)
+            feats, total, excl = c.convert_layer(layer_id, text, None, c.load_geocode_cache())
             self.assertGreater(len(feats), 0, layer_id)
             if not spec.get("group"):
                 self.assertEqual(len(feats) + len(excl), total, layer_id)

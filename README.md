@@ -28,6 +28,7 @@
 npm install
 python3 scripts/fetch.py      # CSV を取得（data/raw/ に保存。失敗時は既存を保持）
 python3 scripts/lookup_muni.py  # 座標の自治体コードを取得（data/geo/muni-cache.json。新しい座標だけ問い合わせ）
+python3 scripts/lookup_geocode.py  # 座標のないデータ（文化財）の住所を代表点に変換（data/geo/geocode-cache.json）
 python3 scripts/convert.py    # CSV → GeoJSON（public/data/）。何度実行しても同じ結果
 npm run dev                   # 開発サーバー
 npm run build                 # dist/ に出力

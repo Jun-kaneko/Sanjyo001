@@ -42,7 +42,12 @@ def validate(data, spec):
         raise ValueError(f"ファイルが小さすぎます ({len(data)} bytes)")
     text, _, _ = decode_bytes(data)
     header, records = parse_rows(text)
-    if not any(h in header for h in ("緯度", "latitude")):
+    # 座標のないデータ（geocode 指定）は住所列で検証する
+    needed = [spec["address"]] if spec.get("geocode") else None
+    if needed:
+        if not all(n in header for n in needed):
+            raise ValueError(f"{needed} の列が見つかりません")
+    elif not any(h in header for h in ("緯度", "latitude")):
         raise ValueError("緯度列が見つかりません")
     if not records:
         raise ValueError("データ行がありません")

@@ -146,3 +146,5 @@ a { color: var(--accent); }
 .site-footer a { padding: 2px 0; }
 
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+
+.legend-btn { display: inline-block; text-decoration: none; text-align: center; line-height: 1.4; padding: 10px 14px; }

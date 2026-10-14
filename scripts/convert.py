@@ -94,6 +94,21 @@ LAYERS = {
         file="000114888.csv", label="介護サービス施設",
         name="介護サービス事業所名称", address="住所", phone="電話番号",
         services="実施サービス", details=[("備考", "備考")], group=True),
+    "wifi": dict(
+        file="000104492.csv", label="公衆無線LANアクセスポイント",
+        name="施設", address="住所", phone="電話番号", url="url", details=[]),
+    "exchange": dict(
+        file="000114887.csv", label="交流施設・アトリエ付滞在型施設",
+        name="場所名称", address="住所", phone="連絡先電話番号", sub="分類", url="URL",
+        details=[("備考", "備考")]),
+    "hydrant": dict(
+        file="000105134.csv", label="消火栓",
+        name="種別", address="住所",
+        details=[("管径", "管径(mm)"), ("管理番号", "管理番号"), ("備考", "備考")]),
+    "tank": dict(
+        file="000121011.csv", label="防火水槽",
+        name="種別", address="住所",
+        details=[("容量(立方m)", "容量(立方m)"), ("管理番号", "管理番号"), ("備考", "備考")]),
     "bear": dict(
         file="000102428.csv", label="クマ出没箇所",
         name="地区", sub="種別",

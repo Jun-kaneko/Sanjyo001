@@ -74,21 +74,26 @@ async function loadData() {
     return r.json();
   });
   state.manifest = await get('manifest.json');
-  await Promise.all(LAYERS.map(async (l) => {
-    const fc = await get(`${l.id}.geojson`);
+  const collections = await Promise.all(LAYERS.map((l) => get(`${l.id}.geojson`)));
+  // 点の多いレイヤー（消火栓など）を先に追加して、他のアイコンの下に描く
+  const order = LAYERS.map((l, i) => ({ l, fc: collections[i] }))
+    .sort((a, b) => Number(Boolean(b.l.minzoom)) - Number(Boolean(a.l.minzoom)));
+  order.forEach(({ l, fc }) => {
     state.features[l.id] = fc.features;
+    const k = l.minzoom ? 0.65 : 1; // 密集するレイヤーは小さめに
     map.addSource(`pt-${l.id}`, { type: 'geojson', data: fc });
     map.addLayer({
       id: `pt-${l.id}`, type: 'symbol', source: `pt-${l.id}`,
+      ...(l.minzoom ? { minzoom: l.minzoom } : {}),
       filter: l.id === 'bear' ? bearFilter() ?? true : true,
       layout: {
         'icon-image': `icon-${l.id}`,
-        'icon-size': ['interpolate', ['linear'], ['zoom'], 10, 0.7, 13, 1.0, 16, 1.25],
+        'icon-size': ['interpolate', ['linear'], ['zoom'], 10, 0.7 * k, 13, 1.0 * k, 16, 1.25 * k],
         'icon-allow-overlap': true,
         visibility: state.visible[l.id] ? 'visible' : 'none',
       },
     });
-  }));
+  });
 }
 
 function setLayerVisible(id, on) {
@@ -342,7 +347,7 @@ function buildToggles() {
     const img = el('img', { src: iconDataUrl(l), alt: '', width: '28', height: '28' });
     const m = state.manifest[l.id];
     const label = el('span', { class: 'toggle-text' }, `${l.label}`,
-      el('span', { class: 'toggle-count' }, m ? `（${m.count}件）` : ''));
+      el('span', { class: 'toggle-count' }, `${m ? `（${m.count}件）` : ''}${l.minzoom ? '　※拡大すると表示' : ''}`));
     ul.append(toggleItem('layer', l.id, [img, label], state.visible[l.id], (on) => setLayerVisible(l.id, on)));
   });
   const hz = $('hazard-toggles');

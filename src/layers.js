@@ -1,5 +1,5 @@
 // 地図レイヤーの定義。色だけに頼らないよう「色＋形＋文字」で区別する。
-// nearby: 「うちの近く」パネルの検索対象にするか / on: 初期表示
+// nearby: 「うちの近く」パネルの検索対象にするか / on: 初期表示 / minzoom: 点が多いため、このズーム以上で描画
 
 export const LAYERS = [
   { id: 'shelter', label: '指定緊急避難場所', short: '避難場所', color: '#b3261e', shape: 'triangle', glyph: '避', nearby: true, on: true },
@@ -13,6 +13,10 @@ export const LAYERS = [
   { id: 'school', label: '小・中学校', short: '学校', color: '#7a5c00', shape: 'square', glyph: '学', nearby: false, on: false },
   { id: 'public', label: '公共施設', short: '公共施設', color: '#33415c', shape: 'hexagon', glyph: '公', nearby: false, on: false },
   { id: 'tourism', label: '観光施設', short: '観光', color: '#1b5e20', shape: 'diamond', glyph: '観', nearby: false, on: false },
+  { id: 'wifi', label: '公衆無線LANアクセスポイント', short: 'Wi-Fi', color: '#006064', shape: 'hexagon', glyph: 'W', nearby: true, on: false },
+  { id: 'exchange', label: '交流施設・アトリエ付滞在型施設', short: '交流施設', color: '#6d4c00', shape: 'pentagon', glyph: '交', nearby: false, on: false },
+  { id: 'hydrant', label: '消火栓', short: '消火栓', color: '#b3261e', shape: 'circle', glyph: '消', nearby: false, on: false, minzoom: 14 },
+  { id: 'tank', label: '防火水槽', short: '防火水槽', color: '#1a4f8f', shape: 'square', glyph: '水', nearby: false, on: false, minzoom: 14 },
   { id: 'care', label: '介護サービス施設', short: '介護', color: '#8c2f00', shape: 'circle', glyph: '介', nearby: false, on: false },
 ];
 

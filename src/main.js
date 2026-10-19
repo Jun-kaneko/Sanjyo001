@@ -1,7 +1,7 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './style.css';
-import { LAYERS, HAZARDS, OFFICIAL_HAZARD_URL, DISTRICT_MODES, DISTRICT_COLORS, HUGCA_INFO_URL } from './layers.js';
+import { LAYERS, HAZARDS, OFFICIAL_HAZARD_URL, DISTRICT_MODES, DISTRICT_COLORS, HUGCA_INFO_URL, QUICK_PLACES } from './layers.js';
 import { iconImageData, iconDataUrl } from './icons.js';
 import { distanceM, formatDistance, bearingLabel, geocode } from './geo.js';
 
@@ -301,7 +301,31 @@ function makePinElement() {
   return wrap;
 }
 
+// 初回ヒント: ピンを置く操作をするか「閉じる」を押すと消え、次回以降は出さない
+const HINT_KEY = 'sanjo-hint-dismissed';
+function hintDismissed() {
+  try { return localStorage.getItem(HINT_KEY) === '1'; } catch { return false; }
+}
+function dismissHint() {
+  $('map-hint').hidden = true;
+  try { localStorage.setItem(HINT_KEY, '1'); } catch { /* 保存できない環境では毎回表示 */ }
+}
+
+function buildQuickPlaces() {
+  const box = $('quick-places');
+  QUICK_PLACES.forEach((p) => {
+    const b = el('button', { type: 'button', class: 'btn chip' }, p.name);
+    b.addEventListener('click', () => {
+      setStatus(`「${p.name}」付近にピンを置きました（例）。自宅周辺は住所か「現在地」で表示できます。`);
+      setPin(p.lonlat);
+      selectTab('nearby');
+    });
+    box.append(b);
+  });
+}
+
 function setPin(lonlat, { fly = true, zoom = 15 } = {}) {
+  dismissHint();
   state.pin = lonlat;
   if (!state.marker) {
     state.marker = new maplibregl.Marker({ element: makePinElement(), anchor: 'bottom', draggable: true })
@@ -552,6 +576,10 @@ function init() {
   });
   $('search-form').addEventListener('submit', onSearch);
   $('locate-btn').addEventListener('click', onLocate);
+  buildQuickPlaces();
+  $('map-hint').hidden = hintDismissed();
+  $('hint-locate').addEventListener('click', onLocate);
+  $('hint-close').addEventListener('click', dismissHint);
   $('radius').addEventListener('change', renderNearby);
   $('center-pin-btn').addEventListener('click', () => {
     const c = map.getCenter();

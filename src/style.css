@@ -45,6 +45,8 @@ a { color: var(--accent); }
 .site-header { padding: 4px 12px 6px; border-bottom: 1px solid var(--line); background: var(--bg); }
 .site-header h1 { margin: 0; font-size: 1.05rem; line-height: 1.4; }
 .site-header .city { margin-left: 8px; font-size: 0.9rem; font-weight: normal; color: var(--muted); }
+.tagline { margin: 2px 0 0; font-size: 0.95rem; font-weight: bold; line-height: 1.4; color: var(--accent); }
+.tagline-sub { display: none; margin: 2px 0 4px; font-size: 0.85rem; color: var(--muted); }
 .disclaimer {
   margin: 2px 0 0; padding: 2px 8px; font-size: 0.78rem; line-height: 1.4;
   background: var(--warn-bg); border-left: 5px solid var(--warn-line); border-radius: 4px;
@@ -77,6 +79,20 @@ a { color: var(--accent); }
   cursor: pointer;
 }
 .btn.primary { background: var(--accent); color: var(--accent-fg); }
+.locate { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; }
+.search .locate { flex: 2; min-height: 52px; font-size: 1.05rem; }
+.quick { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 6px 0 2px; }
+.quick-label { font-size: 0.85rem; color: var(--muted); }
+.chip { flex: none; min-height: 44px; padding: 4px 9px; font-size: 0.85rem; border-radius: 22px; }
+.map-hint {
+  position: absolute; z-index: 3; top: 10px; left: 10px; right: 56px; max-width: 420px;
+  padding: 10px 12px; background: rgba(255, 255, 255, 0.97); border: 2px solid var(--accent); border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); font-size: 0.92rem; line-height: 1.5;
+}
+.map-hint[hidden] { display: none; }
+.map-hint p { margin: 0 0 8px; }
+.map-hint-actions { display: flex; gap: 8px; }
+.map-hint-actions .btn { flex: 1; min-height: 44px; padding: 4px 8px; font-size: 0.95rem; }
 .btn:active { filter: brightness(0.92); }
 .choice { width: 100%; text-align: left; margin-bottom: 6px; }
 
@@ -192,6 +208,9 @@ a { color: var(--accent); }
     padding: 12px 16px 20px; border-right: 1px solid var(--line); border-bottom: 0;
   }
   .search .btn { flex: none; }
+  .search .locate { flex: none; min-height: 44px; font-size: 1rem; }
+  .tagline { font-size: 1.1rem; margin-top: 4px; }
+  .tagline-sub { display: block; }
   .search input[type="search"] { flex: 1 1 200px; }
   .panel .privacy-note { font-size: 0.82rem; margin: 6px 0; }
   .site-footer { padding: 4px 16px; }
@@ -203,4 +222,15 @@ a { color: var(--accent); }
   .tab[aria-selected="true"] { border-top-color: transparent; border-bottom-color: var(--accent); background: transparent; }
   .tab-map { display: none; }
   .maplibregl-popup-content { max-height: 45dvh; }
+}
+
+/* スマホ: おすすめ地点は1行（はみ出す場合は横にスクロール）、初回ヒントは文章と「閉じる」だけにして地図を隠さない */
+@media (max-width: 899px) {
+  .quick { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 4px 0 0; }
+  .quick-label { flex: none; }
+  .tagline { font-size: 0.88rem; }
+  #hint-locate { display: none; }
+  .map-hint { padding: 8px 10px; font-size: 0.85rem; }
+  .map-hint p { margin: 0 0 4px; }
+  .map-hint-actions .btn { flex: none; padding: 2px 18px; }
 }

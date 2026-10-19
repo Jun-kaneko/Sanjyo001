@@ -3,9 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="三条市のオープンデータで、自宅周辺の避難場所・AED・公衆トイレ・医療機関などを地図で確認できます。" />
+  <meta name="description" content="自宅の近くの避難場所・AED・病院・公衆トイレなどを、三条市のオープンデータで地図にまとめて確認できる非公式マップ。クマの出没情報や、洪水・土砂災害の想定区域も重ねて見られます。" />
+  <link rel="canonical" href="https://jun-kaneko.github.io/Sanjyo001/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="うちの近くマップ（三条市）" />
+  <meta property="og:locale" content="ja_JP" />
+  <meta property="og:title" content="うちの近くマップ｜三条市の避難場所・AED・病院・トイレを地図で確認（非公式）" />
+  <meta property="og:description" content="自宅の近くの施設を地図でまとめて確認。クマの出没情報や、洪水・土砂災害の想定区域も重ねて見られます。" />
+  <meta property="og:url" content="https://jun-kaneko.github.io/Sanjyo001/" />
+  <meta property="og:image" content="https://jun-kaneko.github.io/Sanjyo001/ogp.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="referrer" content="no-referrer" />
-  <title>うちの近くマップ（三条市）</title>
+  <title>うちの近くマップ｜三条市の避難場所・AED・病院・トイレを地図で確認（非公式）</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230b4f8a'/%3E%3Cpath d='M16 7l7 7v10H9V14z' fill='white'/%3E%3C/svg%3E" />
 </head>
 <body>
@@ -13,6 +24,8 @@
 
   <header class="site-header">
     <h1>うちの近くマップ<span class="city">三条市</span></h1>
+    <p class="tagline">自宅の近くの避難場所・AED・病院・トイレを、地図でまとめて確認</p>
+    <p class="tagline-sub">クマの出没情報や、洪水・土砂災害の想定区域も重ねて見られます【三条市・非公式】</p>
     <p class="disclaimer" role="note">
       <strong>この地図は参考情報です。</strong>避難時は必ず三条市の公式ハザードマップ・避難情報を確認してください。
       <a id="official-link" href="#" target="_blank" rel="noopener noreferrer">三条市の防災情報（公式）</a>
@@ -25,9 +38,10 @@
         <label for="search-input" class="visually-hidden">住所を入力</label>
         <input id="search-input" type="search" inputmode="search" autocomplete="off"
                placeholder="住所（例: 三条市旭町2-3-1）" />
-        <button type="submit" class="btn primary">検索</button>
-        <button type="button" id="locate-btn" class="btn">現在地</button>
+        <button type="button" id="locate-btn" class="btn primary locate"><svg class="locate-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.800 7-13a7 7 0 0 0-7-7zm0 9.500A2.500 2.500 0 1 1 12 6.500a2.500 2.500 0 0 1 0 5z"/></svg>現在地から探す</button>
+        <button type="submit" class="btn">住所で検索</button>
       </form>
+      <div id="quick-places" class="quick" aria-label="おすすめの地点（押すとその周辺を表示）"><span class="quick-label">例:</span></div>
       <p class="privacy-note">
         入力した住所は国土地理院の住所検索APIに送信されます。現在地・距離の計算は端末内だけで行い、当サイトには送信・保存しません。
       </p>
@@ -111,6 +125,13 @@
 
     <section class="map-wrap" aria-label="地図">
       <div id="sheet-host" class="sheet-host"></div>
+      <div id="map-hint" class="map-hint" role="note" hidden>
+        <p>ここは三条市役所周辺です。住所か「現在地」で、自宅周辺を表示できます。</p>
+        <div class="map-hint-actions">
+          <button type="button" id="hint-locate" class="btn primary">現在地から探す</button>
+          <button type="button" id="hint-close" class="btn">閉じる</button>
+        </div>
+      </div>
       <div id="map-legend" class="map-legend" hidden></div>
       <div id="map" role="application" aria-label="三条市の地図。ピンや施設はリストからも選べます"></div>
       <noscript><p class="status">この地図の表示には JavaScript が必要です。</p></noscript>

@@ -46,3 +46,11 @@ export const DISTRICT_COLORS = ['#f1eef6', '#bdc9e1', '#74a9cf', '#2b8cbe', '#04
 // 三条市子育て支援事業 HUGCA（ハグカ）の案内ページ（特典の内容はこちらで確認する）
 export const HUGCA_INFO_URL =
   'https://www.city.sanjo.niigata.jp/soshiki/sanjoukyouiku/kyoikuiinkaijimukyoku/kosodateshienka/7/101/index.html';
+
+// 「例」ボタンの地点（座標は三条市オープンデータの公共施設・駅一覧の値）
+export const QUICK_PLACES = [
+  { name: '三条市役所', lonlat: [138.961526, 37.636361] },
+  { name: '東三条駅', lonlat: [138.97365, 37.628515] },
+  { name: '燕三条駅', lonlat: [138.938671, 37.647735] },
+  { name: '下田庁舎', lonlat: [139.031806, 37.571557] },
+];

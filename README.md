@@ -58,6 +58,11 @@ docs/            data-report.md（調査）, coord-issues.md, convert-log.md
 .github/workflows/  update-data.yml（週次更新）, deploy.yml（Pages公開）
 ```
 
+## 初回ヒント・おすすめ地点・共有時の表示
+- 検索欄の下の「例: 三条市役所／東三条駅／燕三条駅／下田庁舎」は、`src/layers.js` の `QUICK_PLACES`（名称と座標）で変更できます。
+- 地図上の初回ヒントは、ピンを置く操作か「閉じる」で消え、ブラウザの `localStorage`（キー `sanjo-hint-dismissed`）に記録します。再表示したいときはこの値を削除してください。
+- LINE・SNS 共有時の画像は `public/ogp.png`（1200×630）、タイトルや説明は `index.html` の `og:*` メタタグです。画像を差し替えたときは、SNS 側のキャッシュにより反映まで時間がかかることがあります。
+
 ## 公開（GitHub Pages）
 
 リポジトリ: https://github.com/Jun-kaneko/Sanjyo001

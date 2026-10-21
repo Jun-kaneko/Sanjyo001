@@ -376,9 +376,12 @@ function renderNearby() {
   });
   items.sort((a, b) => a.d - b.d);
   const radiusText = radius >= 1000 ? `${radius / 1000}km` : `${radius}m`;
-  summary.textContent = items.length
+  // 点が多い・位置が目安のレイヤーは一覧に含めないため、表示中ならその旨を知らせる
+  const excluded = LAYERS.filter((l) => !l.nearby && state.visible[l.id]).map((l) => l.short);
+  const excludedNote = excluded.length ? `（${excluded.join('・')}は一覧に含まれません。地図上でご確認ください）` : '';
+  summary.textContent = (items.length
     ? `ピンから${radiusText}以内に ${items.length} 件（近い順）。表示中のカテゴリのみ。`
-    : `ピンから${radiusText}以内に、表示中のカテゴリの施設は見つかりませんでした。範囲を広げるか、「表示の切替」を確認してください。`;
+    : `ピンから${radiusText}以内に、表示中のカテゴリの施設は見つかりませんでした。範囲を広げるか、「表示の切替」を確認してください。`) + excludedNote;
   const shown = items.slice(0, 100);
   shown.forEach(({ layer, feature, d }) => {
     const p = feature.properties;

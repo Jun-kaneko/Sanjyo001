@@ -10,16 +10,16 @@ export const LAYERS = [
   { id: 'station', label: '駅・バス停留所', short: '駅・バス停', color: '#4a4a4a', shape: 'pentagon', glyph: '駅', nearby: true, on: true },
   { id: 'drt', label: 'デマンド交通停留所', short: 'デマンド交通', color: '#00707a', shape: 'star', glyph: 'デ', nearby: true, on: false },
   { id: 'bear', label: 'クマ出没箇所', short: 'クマ出没', color: '#7a1f5c', shape: 'invtriangle', glyph: '熊', nearby: true, on: true },
-  { id: 'school', label: '小・中学校', short: '学校', color: '#7a5c00', shape: 'square', glyph: '学', nearby: false, on: false },
-  { id: 'public', label: '公共施設', short: '公共施設', color: '#33415c', shape: 'hexagon', glyph: '公', nearby: false, on: false },
-  { id: 'tourism', label: '観光施設', short: '観光', color: '#1b5e20', shape: 'diamond', glyph: '観', nearby: false, on: false },
-  { id: 'hugca', label: 'HUGCA（ハグカ）協賛店', short: 'HUGCA協賛店', color: '#c2185b', shape: 'diamond', glyph: 'ハ', nearby: false, on: false },
+  { id: 'school', label: '小・中学校', short: '学校', color: '#7a5c00', shape: 'square', glyph: '学', nearby: true, on: false },
+  { id: 'public', label: '公共施設', short: '公共施設', color: '#33415c', shape: 'hexagon', glyph: '公', nearby: true, on: false },
+  { id: 'tourism', label: '観光施設', short: '観光', color: '#1b5e20', shape: 'diamond', glyph: '観', nearby: true, on: false },
+  { id: 'hugca', label: 'HUGCA（ハグカ）協賛店', short: 'HUGCA協賛店', color: '#c2185b', shape: 'diamond', glyph: 'ハ', nearby: true, on: false },
   { id: 'wifi', label: '公衆無線LANアクセスポイント', short: 'Wi-Fi', color: '#006064', shape: 'hexagon', glyph: 'W', nearby: true, on: false },
-  { id: 'exchange', label: '交流施設・アトリエ付滞在型施設', short: '交流施設', color: '#6d4c00', shape: 'pentagon', glyph: '交', nearby: false, on: false },
+  { id: 'exchange', label: '交流施設・アトリエ付滞在型施設', short: '交流施設', color: '#6d4c00', shape: 'pentagon', glyph: '交', nearby: true, on: false },
   { id: 'hydrant', label: '消火栓', short: '消火栓', color: '#b3261e', shape: 'circle', glyph: '消', nearby: false, on: false, minzoom: 14 },
   { id: 'tank', label: '防火水槽', short: '防火水槽', color: '#1a4f8f', shape: 'square', glyph: '水', nearby: false, on: false, minzoom: 14 },
   { id: 'heritage', label: '文化財（位置は町丁目の目安）', short: '文化財', color: '#5d4037', shape: 'star', glyph: '文', nearby: false, on: false },
-  { id: 'care', label: '介護サービス施設', short: '介護', color: '#8c2f00', shape: 'circle', glyph: '介', nearby: false, on: false },
+  { id: 'care', label: '介護サービス施設', short: '介護', color: '#8c2f00', shape: 'circle', glyph: '介', nearby: true, on: false },
 ];
 
 // 国土地理院タイル（ハザードマップポータルサイト）。ズーム 2〜17。

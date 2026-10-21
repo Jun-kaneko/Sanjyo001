@@ -258,3 +258,22 @@ a { color: var(--accent); }
 .gomi-cond { margin: 10px 0 4px; font-weight: bold; }
 .gomi-pin .gomi-open { margin-bottom: 4px; }
 .gomi-pin .gomi-district { font-size: 1.2rem; }
+
+/* ---- スマホ: 「上の検索エリア」と「タブで開く画面」を見た目で区別する ---- */
+.sheet-bar { display: none; }
+@media (max-width: 899px) {
+  .panel { background: #e7f0f9; border-bottom: 3px solid var(--accent); box-shadow: 0 2px 6px rgba(11, 79, 138, 0.18); position: relative; z-index: 6; }
+  .panel .search input[type="search"] { border-color: var(--accent); }
+  .panel .privacy-note { color: #34495e; }
+  .sheet-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    position: sticky; top: -12px; z-index: 2; margin: -12px -14px 10px; padding: 0 8px 0 14px;
+    min-height: 48px; background: var(--accent); color: var(--accent-fg);
+  }
+  .sheet-title { font-size: 1.1rem; font-weight: bold; }
+  .sheet-close {
+    min-height: 40px; padding: 4px 12px; font: inherit; font-size: 0.9rem; color: var(--accent-fg);
+    background: transparent; border: 2px solid var(--accent-fg); border-radius: 8px; cursor: pointer;
+  }
+  .sheet-host .view { border-top: 0; }
+}

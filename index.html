@@ -57,6 +57,7 @@
       </div>
 
       <div id="view-nearby" role="tabpanel" aria-labelledby="tab-nearby" class="view">
+        <div class="sheet-bar"><span class="sheet-title">うちの近く</span><button type="button" class="sheet-close">地図に戻る</button></div>
         <div class="nearby-controls">
           <label for="radius">範囲</label>
           <select id="radius">
@@ -72,6 +73,7 @@
       </div>
 
       <div id="view-layers" role="tabpanel" aria-labelledby="tab-layers" class="view" hidden>
+        <div class="sheet-bar"><span class="sheet-title">表示の切替</span><button type="button" class="sheet-close">地図に戻る</button></div>
         <h2 class="h2">施設・出没情報</h2>
         <ul id="layer-toggles" class="toggle-list"></ul>
 
@@ -99,6 +101,7 @@
       </div>
 
       <div id="view-gomi" role="tabpanel" aria-labelledby="tab-gomi" class="view" hidden>
+        <div class="sheet-bar"><span class="sheet-title">ごみ</span><button type="button" class="sheet-close">地図に戻る</button></div>
         <h2 class="h2" id="gomi-title">ごみカレンダー</h2>
         <p class="note">お住まいの町名を選ぶと、三条市の「ごみカレンダー」（PDF）を開けます。出す日は地区ごとに異なり、祝日や年末年始などで変わることがあるため、必ず市のカレンダーでご確認ください。</p>
         <div id="gomi-pin" class="gomi-card gomi-pin" aria-live="polite"></div>
@@ -118,6 +121,7 @@
       </div>
 
       <div id="view-about" role="tabpanel" aria-labelledby="tab-about" class="view" hidden>
+        <div class="sheet-bar"><span class="sheet-title">データ</span><button type="button" class="sheet-close">地図に戻る</button></div>
         <h2 class="h2">このサイトについて</h2>
         <p class="note">
           三条市が公開するオープンデータと国土地理院のタイルを使い、自宅周辺の施設を地図で確認できるようにした、<strong>個人作成の非公式サイト</strong>です。三条市が運営するものではありません。パソコンでの利用がおすすめですが、スマートフォンでも画面下のタブで操作できます。

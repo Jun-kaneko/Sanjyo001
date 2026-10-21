@@ -582,6 +582,7 @@ function init() {
     initGomi({ getPin: () => state.pin, findDistrict: findDistrictName });
   }
   buildTabs();
+  document.querySelectorAll('.sheet-close').forEach((b) => b.addEventListener('click', () => selectTab('map')));
   placeSheets();
   selectTab(isMobile() ? 'map' : 'nearby');
   mobileMq.addEventListener('change', () => {

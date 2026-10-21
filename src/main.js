@@ -4,7 +4,7 @@ import './style.css';
 import { LAYERS, HAZARDS, OFFICIAL_HAZARD_URL, DISTRICT_MODES, DISTRICT_COLORS, HUGCA_INFO_URL, QUICK_PLACES, GOMI_ENABLED } from './layers.js';
 import { initGomi } from './gomi.js';
 import { iconImageData, iconDataUrl } from './icons.js';
-import { distanceM, formatDistance, bearingLabel, geocode } from './geo.js';
+import { distanceM, formatDistance, bearingLabel, geocode, pointInMultiPolygon } from './geo.js';
 
 const CITY_HALL = [138.961526, 37.636361]; // 三条市役所（初期表示）
 const $ = (id) => document.getElementById(id);
@@ -325,9 +325,17 @@ function buildQuickPlaces() {
   });
 }
 
+// ピンの位置が入る行政区（国勢調査の区域）の名称。判定はこの端末の中だけで行う。区域外・未読込なら null
+function findDistrictName(lonlat) {
+  const feats = state.districts?.features || [];
+  const hit = feats.find((f) => pointInMultiPolygon(lonlat, f.geometry.coordinates));
+  return hit ? hit.properties.name : null;
+}
+
 function setPin(lonlat, { fly = true, zoom = 15 } = {}) {
   dismissHint();
   state.pin = lonlat;
+  document.dispatchEvent(new CustomEvent('pin-changed'));
   if (!state.marker) {
     state.marker = new maplibregl.Marker({ element: makePinElement(), anchor: 'bottom', draggable: true })
       .setLngLat(lonlat).addTo(map);
@@ -475,6 +483,7 @@ function placeSheets() {
 }
 
 function selectTab(name) {
+  document.dispatchEvent(new CustomEvent('tab-selected', { detail: name }));
   document.querySelectorAll('.tab').forEach((t) => {
     const on = t.id === `tab-${name}`;
     t.setAttribute('aria-selected', String(on));
@@ -570,7 +579,7 @@ function init() {
   $('official-link').href = OFFICIAL_HAZARD_URL;
   if (GOMI_ENABLED || new URLSearchParams(location.search).get('gomi') === '1') {
     $('tab-gomi').hidden = false;
-    initGomi();
+    initGomi({ getPin: () => state.pin, findDistrict: findDistrictName });
   }
   buildTabs();
   placeSheets();

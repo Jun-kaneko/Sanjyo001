@@ -254,3 +254,7 @@ a { color: var(--accent); }
 .gomi-warn { margin: 8px 0; padding: 6px 8px; font-size: 0.88rem; background: var(--warn-bg); border-radius: 4px; }
 .gomi-actions { margin-top: 8px; }
 @media (max-width: 899px) { .tab { font-size: 0.88rem; padding: 6px 2px; } }
+.gomi-pin { margin-top: 8px; }
+.gomi-cond { margin: 10px 0 4px; font-weight: bold; }
+.gomi-pin .gomi-open { margin-bottom: 4px; }
+.gomi-pin .gomi-district { font-size: 1.2rem; }

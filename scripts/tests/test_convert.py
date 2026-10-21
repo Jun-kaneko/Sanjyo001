@@ -210,12 +210,37 @@ class GomiTest(unittest.TestCase):
         self.assertEqual(len(data["districts"]), 3)
         self.assertEqual(data["pdfBase"] + data["towns"][0]["pdf"][:2], data["pdfBase"] + data["towns"][0]["pdf"][:2])
 
+    def test_expand_town(self):
+        e = self.g.expand_town
+        self.assertEqual(e("井栗1〜3"), [("井栗", 1, None), ("井栗", 2, None), ("井栗", 3, None)])
+        self.assertEqual(e("荒町1・2"), [("荒町", 1, None), ("荒町", 2, None)])
+        self.assertEqual(e("東大崎1・2(合屋を除く)"), [("東大崎", 1, "合屋を除く"), ("東大崎", 2, "合屋を除く")])
+        self.assertEqual(e("東鱈田、東鱈田2"), [("東鱈田", None, None), ("東鱈田", 2, None)])
+        self.assertEqual(e("牛ケ島")[0][0], "牛ヶ島")
+
+    def test_link_districts_multiple_and_fallback(self):
+        towns = [
+            {"town": "八幡町(弥彦線北側)", "district": "三条5地区", "pdf": "R8sanjo5.pdf"},
+            {"town": "八幡町(弥彦線南側)", "district": "三条7地区", "pdf": "R8sanjo7.pdf"},
+            {"town": "旭町1", "district": "三条3地区", "pdf": "R8sanjo3.pdf"},
+            {"town": "井栗1〜3", "district": "三条3地区", "pdf": "R8sanjo3.pdf"},
+        ]
+        m = self.g.link_districts(["八幡町", "旭町1丁目", "井栗2丁目", "どこか"], towns)
+        self.assertEqual({c["district"] for c in m["八幡町"]}, {"三条5地区", "三条7地区"})
+        self.assertEqual(m["旭町1丁目"][0]["district"], "三条3地区")
+        self.assertEqual(m["井栗2丁目"][0]["pdf"], "R8sanjo3.pdf")
+        self.assertNotIn("どこか", m)
+
     @unittest.skipUnless((c.ROOT / "public" / "data" / "gomi.json").exists(), "gomi.json がありません")
     def test_real_data(self):
         import json
         d = json.loads((c.ROOT / "public" / "data" / "gomi.json").read_text(encoding="utf-8"))
         self.assertGreaterEqual(len(d["towns"]), 200)
         self.assertEqual(len(d["districts"]), 23)
+        by = d["byDistrict"]
+        self.assertGreaterEqual(len(by), 245)
+        self.assertEqual(sum(1 for v in by.values() if len({x["district"] for x in v}) > 1), 8)
+        self.assertEqual(by["旭町2丁目"][0]["district"], "三条13地区")
         for t in d["towns"]:
             self.assertTrue(t["pdf"].endswith(".pdf") and "/" not in t["pdf"])
             self.assertTrue(t["district"].endswith("地区"))

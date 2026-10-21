@@ -41,3 +41,20 @@ export async function geocode(query) {
     lonlat: f.geometry.coordinates,
   }));
 }
+
+// 点が多角形の内側にあるか（レイキャスティング法）。ring は [[経度, 緯度], ...]
+function inRing(pt, ring) {
+  const [x, y] = pt;
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i, i += 1) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+/** MultiPolygon（[[外周, 穴...], ...]）の内側にあるか。穴の中は外側として扱う。 */
+export function pointInMultiPolygon(pt, polygons) {
+  return polygons.some((poly) => inRing(pt, poly[0]) && !poly.slice(1).some((hole) => inRing(pt, hole)));
+}

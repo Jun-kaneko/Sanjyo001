@@ -9,6 +9,7 @@ import html
 import json
 import re
 import sys
+import unicodedata
 import urllib.request
 from pathlib import Path
 
@@ -72,6 +73,70 @@ def build(title, rows, fetched_at):
     }
 
 
+# ---------- 行政区（国勢調査の区域に結合済みの名称）→ ごみカレンダーの地区 ----------
+
+def _n(s):
+    """NFKC に揃え、ケ→ヶ の表記ゆれを吸収する。"""
+    return unicodedata.normalize("NFKC", s or "").replace("ケ", "ヶ").strip()
+
+
+def expand_town(town):
+    """ごみカレンダーの町名を [(基底名, 丁目の番号 or None, 条件 or None)] に展開する。
+
+    例: "井栗1〜3" → 井栗1・2・3、"東大崎1・2(合屋を除く)" → 東大崎1・2（条件付き）、"東鱈田、東鱈田2" → 2件。"""
+    out = []
+    for part in re.split(r"[、,]", _n(town)):
+        cond = None
+        m = re.search(r"\((.*?)\)", part)
+        if m:
+            cond = m.group(1).strip()
+            part = re.sub(r"\(.*?\)", "", part)
+        part = part.replace("一部", "").strip()
+        m = re.fullmatch(r"(\D+?)(\d+)(?:[〜~～](\d+)|((?:・\d+)+))?", part)
+        if m:
+            a = int(m.group(2))
+            if m.group(3):
+                nums = list(range(a, int(m.group(3)) + 1))
+            elif m.group(4):
+                nums = [a] + [int(x) for x in m.group(4).split("・") if x]
+            else:
+                nums = [a]
+            out += [(m.group(1), n, cond) for n in nums]
+        elif part:
+            out.append((part, None, cond))
+    return out
+
+
+def district_key(name):
+    """行政区名（例: "旭町1丁目"）→ (基底名, 丁目の番号 or None)。"""
+    s = _n(name)
+    m = re.fullmatch(r"(\D+?)(\d+)丁目", s)
+    return (m.group(1), int(m.group(2))) if m else (s, None)
+
+
+def link_districts(district_names, towns):
+    """行政区名 → 候補（地区・PDF・条件）のリスト。町内で地区が分かれる場合は候補が複数になる。"""
+    idx = {}
+    for t in towns:
+        for base, num, cond in expand_town(t["town"]):
+            idx.setdefault((base, num), []).append(
+                {"district": t["district"], "pdf": t["pdf"], "town": t["town"], "cond": cond})
+    out = {}
+    for name in district_names:
+        base, num = district_key(name)
+        cands = idx.get((base, num)) or idx.get((base, None))
+        if not cands:
+            continue
+        seen, uniq = set(), []
+        for c in cands:
+            k = (c["district"], c["cond"])
+            if k not in seen:
+                seen.add(k)
+                uniq.append(c)
+        out[name] = sorted(uniq, key=lambda c: (c["cond"] is not None, c["district"]))
+    return out
+
+
 def fetch_rows():
     req = urllib.request.Request(PAGE_URL, headers={"User-Agent": USER_AGENT})
     with urllib.request.urlopen(req, timeout=60) as r:
@@ -101,8 +166,22 @@ def run(raw_path, out_dir, fetch_log):
     from convert import dump_json  # 循環参照を避けるため遅延 import
     raw = json.loads(raw_path.read_text(encoding="utf-8"))
     data = build(raw["title"], raw["rows"], fetch_log.get(LOG_KEY, {}).get("fetchedAt"))
+    # ピンの位置（行政区の区域）から地区の候補を出すための対応表
+    from convert import decode_bytes, parse_rows
+    pop_csv = raw_path.parent.parent / "000114894.csv"
+    names = []
+    if pop_csv.exists():
+        _, recs = parse_rows(decode_bytes(pop_csv.read_bytes())[0])
+        names = [r["行政区名"] for r in recs if r.get("行政区コード")]
+    by_district = link_districts(names, data["towns"])
+    data["byDistrict"] = {k: [{"district": c["district"], "pdf": c["pdf"], "cond": c["cond"]} for c in v]
+                          for k, v in sorted(by_district.items())}
     dump_json(out_dir / "gomi.json", data)
     entry = {"label": "ごみカレンダー（町名→地区→PDF）", "count": len(data["towns"]),
              "districts": len(data["districts"]), "source": PAGE_URL, "fetchedAt": data["fetchedAt"]}
+    multi = sum(1 for v in data["byDistrict"].values() if len({c["district"] for c in v}) > 1)
+    nomatch = [n for n in names if n not in data["byDistrict"]]
     return entry, [f"| ごみカレンダーの町名 | {len(raw['rows'])} | {len(data['towns'])} | "
-                   f"{len(raw['rows']) - len(data['towns'])} | 地区 {len(data['districts'])} 件 |"]
+                   f"{len(raw['rows']) - len(data['towns'])} | 地区 {len(data['districts'])} 件。"
+                   f"行政区→地区: 対応 {len(data['byDistrict'])}（複数候補 {multi}）/ 対応なし {len(nomatch)}"
+                   f"（{'、'.join(nomatch) or '-'}）|"]

@@ -52,6 +52,7 @@
         <button role="tab" id="tab-map" aria-selected="false" class="tab tab-map" tabindex="-1">地図</button>
         <button role="tab" id="tab-nearby" aria-controls="view-nearby" aria-selected="true" class="tab">うちの近く</button>
         <button role="tab" id="tab-layers" aria-controls="view-layers" aria-selected="false" class="tab" tabindex="-1">表示の切替</button>
+        <button role="tab" id="tab-gomi" aria-controls="view-gomi" aria-selected="false" class="tab" tabindex="-1" hidden>ごみ</button>
         <button role="tab" id="tab-about" aria-controls="view-about" aria-selected="false" class="tab" tabindex="-1">データ</button>
       </div>
 
@@ -94,6 +95,24 @@
         <p class="note">
           色は想定される浸水の深さなどを表します。色の意味は上のボタン先（別ウィンドウ）で「洪水浸水想定区域」を選ぶと表示される凡例で確認してください。
           色が付いていない場所でも、安全を意味するものではありません。三条市の公式ハザードマップの凡例も合わせて確認してください。
+        </p>
+      </div>
+
+      <div id="view-gomi" role="tabpanel" aria-labelledby="tab-gomi" class="view" hidden>
+        <h2 class="h2" id="gomi-title">ごみカレンダー</h2>
+        <p class="note">お住まいの町名を選ぶと、三条市の「ごみカレンダー」（PDF）を開けます。出す日は地区ごとに異なり、祝日や年末年始などで変わることがあるため、必ず市のカレンダーでご確認ください。</p>
+        <div id="gomi-card" class="gomi-card" hidden aria-live="polite"></div>
+        <label for="gomi-input" class="field-label">町名を入力（例: 旭町、本成寺）</label>
+        <input id="gomi-input" type="search" class="field" autocomplete="off" />
+        <p class="field-label">頭文字（カタカナ）から探す</p>
+        <div id="gomi-kana" class="kana-row"></div>
+        <p id="gomi-hint" class="note">町名を入力するか、頭文字を押してください。</p>
+        <p id="gomi-count" class="status" aria-live="polite"></p>
+        <ul id="gomi-results" class="gomi-results"></ul>
+        <p class="note">
+          選んだ町名は、この端末のブラウザにだけ保存されます（当サイトには送信しません）。町名の一覧と地区の対応は、
+          <a id="gomi-source" href="#" target="_blank" rel="noopener noreferrer">三条市のごみカレンダーのページ</a>
+          から <span id="gomi-fetched"></span> に取得したものです。ごみステーションは、お住まいの自治会等で指定された場所をご利用ください。
         </p>
       </div>
 

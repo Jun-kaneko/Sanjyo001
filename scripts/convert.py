@@ -402,6 +402,13 @@ def main():
     import districts
     d_entry, d_log, d_unmatched, d_unused = districts.run(RAW_DIR, OUT_DIR, fetch_log)
     manifest["districts"] = d_entry
+    # ごみカレンダー（町名→地区→PDF。取得済みの場合のみ）
+    import gomi
+    if gomi.RAW_PATH.exists():
+        g_entry, g_log = gomi.run(gomi.RAW_PATH, OUT_DIR, fetch_log)
+        manifest["gomi"] = g_entry
+        log_lines += g_log
+        print(f"gomi       町名 {g_entry['count']}件 / 地区 {g_entry['districts']}件")
     log_lines += d_log
     print(f"districts  行政区 {d_entry['count']}件を結合、面なし {d_entry['excluded']}件")
     dump_json(OUT_DIR / "manifest.json", manifest)

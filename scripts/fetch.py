@@ -78,6 +78,13 @@ def main():
         (RAW_DIR / name).write_bytes(data)
         log[name] = {"sha256": digest, "fetchedAt": today}
         print(f"[NEW ] {name}")
+    # ごみカレンダー（町名→地区→PDFの対応表。PDF自体は取得・保存しない）
+    try:
+        import gomi
+        print(f"[{gomi.fetch_and_save(log, today):4s}] ごみカレンダーの町名一覧")
+    except Exception as e:  # noqa: BLE001
+        failures.append(f"gomi-calendar: {e}")
+        print(f"[FAIL] gomi-calendar: {e}", file=sys.stderr)
     log_path.write_text(json.dumps(log, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
                         encoding="utf-8")
     if failures:

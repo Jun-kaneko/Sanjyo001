@@ -63,6 +63,11 @@ docs/            data-report.md（調査）, coord-issues.md, convert-log.md
 - 地図上の初回ヒントは、ピンを置く操作か「閉じる」で消え、ブラウザの `localStorage`（キー `sanjo-hint-dismissed`）に記録します。再表示したいときはこの値を削除してください。
 - LINE・SNS 共有時の画像は `public/ogp.png`（1200×630）、タイトルや説明は `index.html` の `og:*` メタタグです。画像を差し替えたときは、SNS 側のキャッシュにより反映まで時間がかかることがあります。
 
+## ごみカレンダー（案A・確認用）
+- 町名を選ぶと、該当地区の市の「ごみカレンダー」PDF へのリンクを出す機能です。**PDF の複製や内容の再構成はしていません**（町名→地区→PDF の対応表 `public/data/gomi.json` だけを使います）。
+- 三条市「ホームページ運営方針」に、無断転載の禁止や利用前の連絡、トップページ以外へのリンクの連絡が記載されているため、**市への確認が済むまで非表示**です（`src/layers.js` の `GOMI_ENABLED = false`）。確認用に表示するには URL の末尾に `?gomi=1` を付けます。公開してよいと確認できたら `GOMI_ENABLED = true` にします。
+- 対応表は `scripts/gomi.py`（`fetch.py` から呼び出し）で取得します。年度が変わると PDF 名・町名が変わるため、週次更新の PR で差分を確認してください。
+
 ## 公開（GitHub Pages）
 
 リポジトリ: https://github.com/Jun-kaneko/Sanjyo001

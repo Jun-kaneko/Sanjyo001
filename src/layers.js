@@ -54,3 +54,6 @@ export const QUICK_PLACES = [
   { name: '燕三条駅', lonlat: [138.938671, 37.647735] },
   { name: '下田庁舎', lonlat: [139.031806, 37.571557] },
 ];
+
+// ごみカレンダー機能。市への確認が済むまでは false（URL に ?gomi=1 を付けたときだけ確認用に表示する）
+export const GOMI_ENABLED = false;

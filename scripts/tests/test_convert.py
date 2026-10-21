@@ -175,6 +175,52 @@ class DistrictsTest(unittest.TestCase):
                         self.assertTrue(138.5 < x < 139.5 and 37.3 < y < 37.9)
 
 
+class GomiTest(unittest.TestCase):
+    PAGE = """<html><head><title>令和8年度ごみカレンダー／三条市</title></head><body><table>
+    <tr><th>区分</th><th>町名（行政区）</th><th>地区NO</th></tr>
+    <tr><td>ア</td><td>旭町1</td><td><a href="//www.city.sanjo.niigata.jp/material/files/group/14/R8sanjo3.pdf">3(PDFファイル:924.8KB)</a></td></tr>
+    <tr><td>二</td><td>新堀</td><td><a href="//www.city.sanjo.niigata.jp/material/files/group/14/R8sakae1.pdf">1(PDFファイル:1.1MB)</a></td></tr>
+    <tr><td>ア</td><td>新屋</td><td><a href="//www.city.sanjo.niigata.jp/material/files/group/14/R8shitadaB.pdf">B(PDFファイル:813.9KB)</a></td></tr>
+    <tr><td>ア</td><td>旭町1</td><td><a href="//www.city.sanjo.niigata.jp/material/files/group/14/R8sanjo3.pdf">3(PDFファイル:924.8KB)</a></td></tr>
+    <tr><td>ヲ</td><td>変なもの</td><td><a href="//www.city.sanjo.niigata.jp/material/files/group/14/other.pdf">?</a></td></tr>
+    </table></body></html>"""
+
+    def setUp(self):
+        import gomi
+        self.g = gomi
+
+    def test_parse_and_dedupe(self):
+        title, rows = self.g.parse_page(self.PAGE)
+        self.assertEqual(title, "令和8年度ごみカレンダー")
+        self.assertEqual(len(rows), 4)  # 同じ町名+PDFの重複は1件にまとめる
+        self.assertEqual(rows[0], {"kana": "ア", "town": "旭町1", "district_no": "3", "pdf": "R8sanjo3.pdf"})
+
+    def test_district_label(self):
+        self.assertEqual(self.g.district_label("R8sanjo3.pdf"), "三条3地区")
+        self.assertEqual(self.g.district_label("R8sakae12.pdf"), "栄12地区")
+        self.assertEqual(self.g.district_label("R8shitadaB.pdf"), "下田B地区")
+        self.assertIsNone(self.g.district_label("other.pdf"))
+
+    def test_build_drops_unknown_and_fixes_kana(self):
+        title, rows = self.g.parse_page(self.PAGE)
+        data = self.g.build(title, rows, "2026-10-21")
+        names = [t["town"] for t in data["towns"]]
+        self.assertNotIn("変なもの", names)          # 想定外のファイル名は載せない
+        self.assertEqual([t for t in data["towns"] if t["town"] == "新堀"][0]["kana"], "ニ")
+        self.assertEqual(len(data["districts"]), 3)
+        self.assertEqual(data["pdfBase"] + data["towns"][0]["pdf"][:2], data["pdfBase"] + data["towns"][0]["pdf"][:2])
+
+    @unittest.skipUnless((c.ROOT / "public" / "data" / "gomi.json").exists(), "gomi.json がありません")
+    def test_real_data(self):
+        import json
+        d = json.loads((c.ROOT / "public" / "data" / "gomi.json").read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(d["towns"]), 200)
+        self.assertEqual(len(d["districts"]), 23)
+        for t in d["towns"]:
+            self.assertTrue(t["pdf"].endswith(".pdf") and "/" not in t["pdf"])
+            self.assertTrue(t["district"].endswith("地区"))
+
+
 class WarekiTest(unittest.TestCase):
     def test_convert(self):
         self.assertEqual(c.wareki_to_iso("R7.4.7"), "2025-04-07")

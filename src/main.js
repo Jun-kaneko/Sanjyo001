@@ -1,7 +1,8 @@
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './style.css';
-import { LAYERS, HAZARDS, OFFICIAL_HAZARD_URL, DISTRICT_MODES, DISTRICT_COLORS, HUGCA_INFO_URL, QUICK_PLACES } from './layers.js';
+import { LAYERS, HAZARDS, OFFICIAL_HAZARD_URL, DISTRICT_MODES, DISTRICT_COLORS, HUGCA_INFO_URL, QUICK_PLACES, GOMI_ENABLED } from './layers.js';
+import { initGomi } from './gomi.js';
 import { iconImageData, iconDataUrl } from './icons.js';
 import { distanceM, formatDistance, bearingLabel, geocode } from './geo.js';
 
@@ -567,6 +568,10 @@ function buildDataTable() {
 
 function init() {
   $('official-link').href = OFFICIAL_HAZARD_URL;
+  if (GOMI_ENABLED || new URLSearchParams(location.search).get('gomi') === '1') {
+    $('tab-gomi').hidden = false;
+    initGomi();
+  }
   buildTabs();
   placeSheets();
   selectTab(isMobile() ? 'map' : 'nearby');

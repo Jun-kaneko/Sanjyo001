@@ -1,0 +1,1271 @@
+{
+ "rows": [
+  {
+   "district_no": "3",
+   "kana": "ア",
+   "pdf": "R8sanjo3.pdf",
+   "town": "旭町1"
+  },
+  {
+   "district_no": "13",
+   "kana": "ア",
+   "pdf": "R8sanjo13.pdf",
+   "town": "旭町2"
+  },
+  {
+   "district_no": "2",
+   "kana": "ア",
+   "pdf": "R8sanjo2.pdf",
+   "town": "麻布"
+  },
+  {
+   "district_no": "5",
+   "kana": "ア",
+   "pdf": "R8sanjo5.pdf",
+   "town": "荒町1・2"
+  },
+  {
+   "district_no": "3",
+   "kana": "イ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "井栗1〜3"
+  },
+  {
+   "district_no": "5",
+   "kana": "イ",
+   "pdf": "R8sanjo5.pdf",
+   "town": "石上1〜3"
+  },
+  {
+   "district_no": "3",
+   "kana": "イ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "居島"
+  },
+  {
+   "district_no": "9",
+   "kana": "イ",
+   "pdf": "R8sanjo9.pdf",
+   "town": "一ノ門1・2"
+  },
+  {
+   "district_no": "15",
+   "kana": "イ",
+   "pdf": "R8sanjo15.pdf",
+   "town": "井戸場"
+  },
+  {
+   "district_no": "12",
+   "kana": "ウ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "上野原"
+  },
+  {
+   "district_no": "11",
+   "kana": "ウ",
+   "pdf": "R8sanjo11.pdf",
+   "town": "牛ヶ島"
+  },
+  {
+   "district_no": "16",
+   "kana": "エ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "枝郷"
+  },
+  {
+   "district_no": "15",
+   "kana": "オ",
+   "pdf": "R8sanjo15.pdf",
+   "town": "大島"
+  },
+  {
+   "district_no": "15",
+   "kana": "オ",
+   "pdf": "R8sanjo15.pdf",
+   "town": "大野畑"
+  },
+  {
+   "district_no": "15",
+   "kana": "オ",
+   "pdf": "R8sanjo15.pdf",
+   "town": "荻島"
+  },
+  {
+   "district_no": "2",
+   "kana": "カ",
+   "pdf": "R8sanjo2.pdf",
+   "town": "篭場"
+  },
+  {
+   "district_no": "16",
+   "kana": "カ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "片口"
+  },
+  {
+   "district_no": "1",
+   "kana": "カ",
+   "pdf": "R8sanjo1.pdf",
+   "town": "嘉坪川1・2"
+  },
+  {
+   "district_no": "6",
+   "kana": "カ",
+   "pdf": "R8sanjo6.pdf",
+   "town": "金子"
+  },
+  {
+   "district_no": "14",
+   "kana": "カ",
+   "pdf": "R8sanjo14.pdf",
+   "town": "金子新田工場団地"
+  },
+  {
+   "district_no": "15",
+   "kana": "カ",
+   "pdf": "R8sanjo15.pdf",
+   "town": "上須頃"
+  },
+  {
+   "district_no": "3",
+   "kana": "カ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "上保内(信越線西側)"
+  },
+  {
+   "district_no": "12",
+   "kana": "カ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "上保内(信越線東側)"
+  },
+  {
+   "district_no": "8",
+   "kana": "キ",
+   "pdf": "R8sanjo8.pdf",
+   "town": "北新保1"
+  },
+  {
+   "district_no": "16",
+   "kana": "キ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "北新保2"
+  },
+  {
+   "district_no": "12",
+   "kana": "キ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "北中"
+  },
+  {
+   "district_no": "11",
+   "kana": "キ",
+   "pdf": "R8sanjo11.pdf",
+   "town": "北入蔵1・2"
+  },
+  {
+   "district_no": "12",
+   "kana": "キ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "北入蔵3"
+  },
+  {
+   "district_no": "3",
+   "kana": "キ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "北野"
+  },
+  {
+   "district_no": "8",
+   "kana": "キ",
+   "pdf": "R8sanjo8.pdf",
+   "town": "北四日町"
+  },
+  {
+   "district_no": "5",
+   "kana": "ク",
+   "pdf": "R8sanjo5.pdf",
+   "town": "栗林"
+  },
+  {
+   "district_no": "13",
+   "kana": "コ",
+   "pdf": "R8sanjo13.pdf",
+   "town": "興野1"
+  },
+  {
+   "district_no": "9",
+   "kana": "コ",
+   "pdf": "R8sanjo9.pdf",
+   "town": "興野2・3"
+  },
+  {
+   "district_no": "14",
+   "kana": "コ",
+   "pdf": "R8sanjo14.pdf",
+   "town": "五明"
+  },
+  {
+   "district_no": "4",
+   "kana": "サ",
+   "pdf": "R8sanjo4.pdf",
+   "town": "桜木町"
+  },
+  {
+   "district_no": "1",
+   "kana": "サ",
+   "pdf": "R8sanjo1.pdf",
+   "town": "三貫地"
+  },
+  {
+   "district_no": "6",
+   "kana": "サ",
+   "pdf": "R8sanjo6.pdf",
+   "town": "三竹1〜3"
+  },
+  {
+   "district_no": "2",
+   "kana": "シ",
+   "pdf": "R8sanjo2.pdf",
+   "town": "島田1〜3"
+  },
+  {
+   "district_no": "12",
+   "kana": "シ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "下坂井"
+  },
+  {
+   "district_no": "14",
+   "kana": "シ",
+   "pdf": "R8sanjo14.pdf",
+   "town": "下新田"
+  },
+  {
+   "district_no": "15",
+   "kana": "シ",
+   "pdf": "R8sanjo15.pdf",
+   "town": "下須頃"
+  },
+  {
+   "district_no": "3",
+   "kana": "シ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "下保内(信越線西側)"
+  },
+  {
+   "district_no": "12",
+   "kana": "シ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "下保内(信越線東側)"
+  },
+  {
+   "district_no": "2",
+   "kana": "シ",
+   "pdf": "R8sanjo2.pdf",
+   "town": "条南町"
+  },
+  {
+   "district_no": "3",
+   "kana": "シ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "白山"
+  },
+  {
+   "district_no": "16",
+   "kana": "シ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "新保"
+  },
+  {
+   "district_no": "3",
+   "kana": "シ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "神明町"
+  },
+  {
+   "district_no": "4",
+   "kana": "ス",
+   "pdf": "R8sanjo4.pdf",
+   "town": "直江町1〜4"
+  },
+  {
+   "district_no": "15",
+   "kana": "ス",
+   "pdf": "R8sanjo15.pdf",
+   "town": "須頃1〜3"
+  },
+  {
+   "district_no": "1",
+   "kana": "ス",
+   "pdf": "R8sanjo1.pdf",
+   "town": "須戸"
+  },
+  {
+   "district_no": "6",
+   "kana": "ス",
+   "pdf": "R8sanjo6.pdf",
+   "town": "諏訪1〜3"
+  },
+  {
+   "district_no": "15",
+   "kana": "タ",
+   "pdf": "R8sanjo15.pdf",
+   "town": "代官島"
+  },
+  {
+   "district_no": "9",
+   "kana": "タ",
+   "pdf": "R8sanjo9.pdf",
+   "town": "田島1(信越線北側)"
+  },
+  {
+   "district_no": "16",
+   "kana": "タ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "田島1(信越線南側)"
+  },
+  {
+   "district_no": "16",
+   "kana": "タ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "田島2"
+  },
+  {
+   "district_no": "2",
+   "kana": "チ",
+   "pdf": "R8sanjo2.pdf",
+   "town": "中新"
+  },
+  {
+   "district_no": "1",
+   "kana": "ツ",
+   "pdf": "R8sanjo1.pdf",
+   "town": "塚野目1〜6"
+  },
+  {
+   "district_no": "6",
+   "kana": "ツ",
+   "pdf": "R8sanjo6.pdf",
+   "town": "月岡1～4"
+  },
+  {
+   "district_no": "16",
+   "kana": "ツ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "月岡1（三条高校新通川付近）"
+  },
+  {
+   "district_no": "11",
+   "kana": "ツ",
+   "pdf": "R8sanjo11.pdf",
+   "town": "鶴田1〜4"
+  },
+  {
+   "district_no": "4",
+   "kana": "ト",
+   "pdf": "R8sanjo4.pdf",
+   "town": "土場"
+  },
+  {
+   "district_no": "3",
+   "kana": "ナ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "仲之町"
+  },
+  {
+   "district_no": "6",
+   "kana": "ナ",
+   "pdf": "R8sanjo6.pdf",
+   "town": "長嶺"
+  },
+  {
+   "district_no": "5",
+   "kana": "二",
+   "pdf": "R8sanjo5.pdf",
+   "town": "西裏館1〜3"
+  },
+  {
+   "district_no": "10",
+   "kana": "二",
+   "pdf": "R8sanjo10.pdf",
+   "town": "西大崎1〜3"
+  },
+  {
+   "district_no": "11",
+   "kana": "二",
+   "pdf": "R8sanjo11.pdf",
+   "town": "西潟"
+  },
+  {
+   "district_no": "6",
+   "kana": "二",
+   "pdf": "R8sanjo6.pdf",
+   "town": "西鱈田"
+  },
+  {
+   "district_no": "14",
+   "kana": "二",
+   "pdf": "R8sanjo14.pdf",
+   "town": "西中"
+  },
+  {
+   "district_no": "4",
+   "kana": "二",
+   "pdf": "R8sanjo4.pdf",
+   "town": "西本成寺1・2"
+  },
+  {
+   "district_no": "14",
+   "kana": "二",
+   "pdf": "R8sanjo14.pdf",
+   "town": "西四日町1〜4"
+  },
+  {
+   "district_no": "13",
+   "kana": "二",
+   "pdf": "R8sanjo13.pdf",
+   "town": "新光町"
+  },
+  {
+   "district_no": "6",
+   "kana": "二",
+   "pdf": "R8sanjo6.pdf",
+   "town": "入蔵新田"
+  },
+  {
+   "district_no": "6",
+   "kana": "二",
+   "pdf": "R8sanjo6.pdf",
+   "town": "如法寺"
+  },
+  {
+   "district_no": "5",
+   "kana": "ハ",
+   "pdf": "R8sanjo5.pdf",
+   "town": "八幡町(弥彦線北側)"
+  },
+  {
+   "district_no": "7",
+   "kana": "ハ",
+   "pdf": "R8sanjo7.pdf",
+   "town": "八幡町(弥彦線南側)"
+  },
+  {
+   "district_no": "3",
+   "kana": "ハ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "林町1"
+  },
+  {
+   "district_no": "13",
+   "kana": "ハ",
+   "pdf": "R8sanjo13.pdf",
+   "town": "林町2"
+  },
+  {
+   "district_no": "13",
+   "kana": "ヒ",
+   "pdf": "R8sanjo13.pdf",
+   "town": "東裏館1〜3"
+  },
+  {
+   "district_no": "12",
+   "kana": "ヒ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "東大崎1(合屋)"
+  },
+  {
+   "district_no": "10",
+   "kana": "ヒ",
+   "pdf": "R8sanjo10.pdf",
+   "town": "東大崎1・2(合屋を除く)"
+  },
+  {
+   "district_no": "9",
+   "kana": "ヒ",
+   "pdf": "R8sanjo9.pdf",
+   "town": "東三条1・2"
+  },
+  {
+   "district_no": "12",
+   "kana": "ヒ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "東三条1(駅南アパマンション)"
+  },
+  {
+   "district_no": "16",
+   "kana": "ヒ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "東新保"
+  },
+  {
+   "district_no": "14",
+   "kana": "ヒ",
+   "pdf": "R8sanjo14.pdf",
+   "town": "東鱈田、東鱈田2"
+  },
+  {
+   "district_no": "14",
+   "kana": "ヒ",
+   "pdf": "R8sanjo14.pdf",
+   "town": "東本成寺"
+  },
+  {
+   "district_no": "4",
+   "kana": "ヒ",
+   "pdf": "R8sanjo4.pdf",
+   "town": "東本成寺一部(県央工業高校北側、土場付近)"
+  },
+  {
+   "district_no": "6",
+   "kana": "フ",
+   "pdf": "R8sanjo6.pdf",
+   "town": "袋"
+  },
+  {
+   "district_no": "3",
+   "kana": "ホ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "本町1"
+  },
+  {
+   "district_no": "7",
+   "kana": "ホ",
+   "pdf": "R8sanjo7.pdf",
+   "town": "本町2〜6"
+  },
+  {
+   "district_no": "16",
+   "kana": "マ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "曲渕1〜3"
+  },
+  {
+   "district_no": "12",
+   "kana": "マ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "松ノ木町"
+  },
+  {
+   "district_no": "3",
+   "kana": "ミ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "みずほ"
+  },
+  {
+   "district_no": "11",
+   "kana": "ミ",
+   "pdf": "R8sanjo11.pdf",
+   "town": "三柳"
+  },
+  {
+   "district_no": "16",
+   "kana": "ミ",
+   "pdf": "R8sanjo16.pdf",
+   "town": "緑ヶ丘"
+  },
+  {
+   "district_no": "8",
+   "kana": "ミ",
+   "pdf": "R8sanjo8.pdf",
+   "town": "南新保"
+  },
+  {
+   "district_no": "6",
+   "kana": "ミ",
+   "pdf": "R8sanjo6.pdf",
+   "town": "南入蔵"
+  },
+  {
+   "district_no": "8",
+   "kana": "ミ",
+   "pdf": "R8sanjo8.pdf",
+   "town": "南四日町1・2"
+  },
+  {
+   "district_no": "14",
+   "kana": "ミ",
+   "pdf": "R8sanjo14.pdf",
+   "town": "南四日町3・4"
+  },
+  {
+   "district_no": "7",
+   "kana": "モ",
+   "pdf": "R8sanjo7.pdf",
+   "town": "元町"
+  },
+  {
+   "district_no": "5",
+   "kana": "モ",
+   "pdf": "R8sanjo5.pdf",
+   "town": "元町(日吉町 ※弥彦線北側)"
+  },
+  {
+   "district_no": "1",
+   "kana": "ヤ",
+   "pdf": "R8sanjo1.pdf",
+   "town": "柳川"
+  },
+  {
+   "district_no": "12",
+   "kana": "ヤ",
+   "pdf": "R8sanjo12.pdf",
+   "town": "柳沢"
+  },
+  {
+   "district_no": "1",
+   "kana": "ヤ",
+   "pdf": "R8sanjo1.pdf",
+   "town": "柳場"
+  },
+  {
+   "district_no": "2",
+   "kana": "ユ",
+   "pdf": "R8sanjo2.pdf",
+   "town": "由利"
+  },
+  {
+   "district_no": "3",
+   "kana": "ヨ",
+   "pdf": "R8sanjo3.pdf",
+   "town": "横町1"
+  },
+  {
+   "district_no": "13",
+   "kana": "ヨ",
+   "pdf": "R8sanjo13.pdf",
+   "town": "横町2"
+  },
+  {
+   "district_no": "6",
+   "kana": "ヨ",
+   "pdf": "R8sanjo6.pdf",
+   "town": "吉田"
+  },
+  {
+   "district_no": "8",
+   "kana": "ヨ",
+   "pdf": "R8sanjo8.pdf",
+   "town": "四日町"
+  },
+  {
+   "district_no": "1",
+   "kana": "イ",
+   "pdf": "R8sakae1.pdf",
+   "town": "泉新田"
+  },
+  {
+   "district_no": "2",
+   "kana": "イ",
+   "pdf": "R8sakae2.pdf",
+   "town": "猪子場新田"
+  },
+  {
+   "district_no": "1",
+   "kana": "イ",
+   "pdf": "R8sakae1.pdf",
+   "town": "今井"
+  },
+  {
+   "district_no": "1",
+   "kana": "イ",
+   "pdf": "R8sakae1.pdf",
+   "town": "今井野新田"
+  },
+  {
+   "district_no": "4",
+   "kana": "イ",
+   "pdf": "R8sakae4.pdf",
+   "town": "岩淵"
+  },
+  {
+   "district_no": "5",
+   "kana": "ウ",
+   "pdf": "R8sakae5.pdf",
+   "town": "浦新田"
+  },
+  {
+   "district_no": "3",
+   "kana": "オ",
+   "pdf": "R8sakae3.pdf",
+   "town": "大面"
+  },
+  {
+   "district_no": "1",
+   "kana": "オ",
+   "pdf": "R8sakae1.pdf",
+   "town": "岡野新田"
+  },
+  {
+   "district_no": "1",
+   "kana": "オ",
+   "pdf": "R8sakae1.pdf",
+   "town": "小古瀬"
+  },
+  {
+   "district_no": "2",
+   "kana": "オ",
+   "pdf": "R8sakae2.pdf",
+   "town": "尾崎"
+  },
+  {
+   "district_no": "2",
+   "kana": "オ",
+   "pdf": "R8sakae2.pdf",
+   "town": "鬼木"
+  },
+  {
+   "district_no": "2",
+   "kana": "オ",
+   "pdf": "R8sakae2.pdf",
+   "town": "鬼木新田"
+  },
+  {
+   "district_no": "3",
+   "kana": "オ",
+   "pdf": "R8sakae3.pdf",
+   "town": "帯織"
+  },
+  {
+   "district_no": "1",
+   "kana": "カ",
+   "pdf": "R8sakae1.pdf",
+   "town": "貝喰新田"
+  },
+  {
+   "district_no": "3",
+   "kana": "キ",
+   "pdf": "R8sakae3.pdf",
+   "town": "北潟"
+  },
+  {
+   "district_no": "4",
+   "kana": "ク",
+   "pdf": "R8sakae4.pdf",
+   "town": "蔵内"
+  },
+  {
+   "district_no": "3",
+   "kana": "コ",
+   "pdf": "R8sakae3.pdf",
+   "town": "高安寺"
+  },
+  {
+   "district_no": "3",
+   "kana": "コ",
+   "pdf": "R8sakae3.pdf",
+   "town": "小滝"
+  },
+  {
+   "district_no": "4",
+   "kana": "サ",
+   "pdf": "R8sakae4.pdf",
+   "town": "栄荻島"
+  },
+  {
+   "district_no": "3",
+   "kana": "サ",
+   "pdf": "R8sakae3.pdf",
+   "town": "山王"
+  },
+  {
+   "district_no": "1",
+   "kana": "セ",
+   "pdf": "R8sakae1.pdf",
+   "town": "芹山"
+  },
+  {
+   "district_no": "1",
+   "kana": "セ",
+   "pdf": "R8sakae1.pdf",
+   "town": "善久寺"
+  },
+  {
+   "district_no": "1",
+   "kana": "セ",
+   "pdf": "R8sakae1.pdf",
+   "town": "千把野新田"
+  },
+  {
+   "district_no": "4",
+   "kana": "チ",
+   "pdf": "R8sakae4.pdf",
+   "town": "茅原"
+  },
+  {
+   "district_no": "2",
+   "kana": "ト",
+   "pdf": "R8sakae2.pdf",
+   "town": "東光寺"
+  },
+  {
+   "district_no": "4",
+   "kana": "ト",
+   "pdf": "R8sakae4.pdf",
+   "town": "戸口"
+  },
+  {
+   "district_no": "1",
+   "kana": "ナ",
+   "pdf": "R8sakae1.pdf",
+   "town": "中島"
+  },
+  {
+   "district_no": "1",
+   "kana": "ナ",
+   "pdf": "R8sakae1.pdf",
+   "town": "中曽根新田"
+  },
+  {
+   "district_no": "5",
+   "kana": "二",
+   "pdf": "R8sakae5.pdf",
+   "town": "新堀"
+  },
+  {
+   "district_no": "5",
+   "kana": "ヒ",
+   "pdf": "R8sakae5.pdf",
+   "town": "一ツ屋敷新田"
+  },
+  {
+   "district_no": "2",
+   "kana": "フ",
+   "pdf": "R8sakae2.pdf",
+   "town": "福島新田甲"
+  },
+  {
+   "district_no": "2",
+   "kana": "フ",
+   "pdf": "R8sakae2.pdf",
+   "town": "福島新田丙"
+  },
+  {
+   "district_no": "3",
+   "kana": "マ",
+   "pdf": "R8sakae3.pdf",
+   "town": "前谷内"
+  },
+  {
+   "district_no": "5",
+   "kana": "ミ",
+   "pdf": "R8sakae5.pdf",
+   "town": "美里"
+  },
+  {
+   "district_no": "4",
+   "kana": "ヤ",
+   "pdf": "R8sakae4.pdf",
+   "town": "安代"
+  },
+  {
+   "district_no": "3",
+   "kana": "ヤ",
+   "pdf": "R8sakae3.pdf",
+   "town": "矢田"
+  },
+  {
+   "district_no": "4",
+   "kana": "ヨ",
+   "pdf": "R8sakae4.pdf",
+   "town": "吉野屋"
+  },
+  {
+   "district_no": "2",
+   "kana": "ワ",
+   "pdf": "R8sakae2.pdf",
+   "town": "若宮新田"
+  },
+  {
+   "district_no": "1",
+   "kana": "ワ",
+   "pdf": "R8sakae1.pdf",
+   "town": "渡前"
+  },
+  {
+   "district_no": "B",
+   "kana": "ア",
+   "pdf": "R8shitadaB.pdf",
+   "town": "荒沢"
+  },
+  {
+   "district_no": "B",
+   "kana": "ア",
+   "pdf": "R8shitadaB.pdf",
+   "town": "新屋"
+  },
+  {
+   "district_no": "B",
+   "kana": "イ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "院内"
+  },
+  {
+   "district_no": "B",
+   "kana": "ウ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "牛ケ首"
+  },
+  {
+   "district_no": "B",
+   "kana": "ウ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "牛野尾"
+  },
+  {
+   "district_no": "B",
+   "kana": "エ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "江口"
+  },
+  {
+   "district_no": "A",
+   "kana": "オ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "大沢"
+  },
+  {
+   "district_no": "A",
+   "kana": "オ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "大平"
+  },
+  {
+   "district_no": "B",
+   "kana": "オ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "大谷地"
+  },
+  {
+   "district_no": "A",
+   "kana": "オ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "荻堀上"
+  },
+  {
+   "district_no": "A",
+   "kana": "オ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "荻堀下"
+  },
+  {
+   "district_no": "B",
+   "kana": "オ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "遅場"
+  },
+  {
+   "district_no": "B",
+   "kana": "オ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "落合"
+  },
+  {
+   "district_no": "B",
+   "kana": "カ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "笠堀"
+  },
+  {
+   "district_no": "B",
+   "kana": "カ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "鹿峠"
+  },
+  {
+   "district_no": "B",
+   "kana": "カ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "上飯田"
+  },
+  {
+   "district_no": "A",
+   "kana": "カ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "上大浦"
+  },
+  {
+   "district_no": "A",
+   "kana": "カ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "上組"
+  },
+  {
+   "district_no": "B",
+   "kana": "カ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "上谷地"
+  },
+  {
+   "district_no": "B",
+   "kana": "キ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "北五百川"
+  },
+  {
+   "district_no": "B",
+   "kana": "ク",
+   "pdf": "R8shitadaB.pdf",
+   "town": "栗山"
+  },
+  {
+   "district_no": "A",
+   "kana": "ク",
+   "pdf": "R8shitadaA.pdf",
+   "town": "桑切"
+  },
+  {
+   "district_no": "B",
+   "kana": "コ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "小長沢"
+  },
+  {
+   "district_no": "B",
+   "kana": "コ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "小外谷"
+  },
+  {
+   "district_no": "A",
+   "kana": "コ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "駒込上"
+  },
+  {
+   "district_no": "A",
+   "kana": "コ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "駒込中"
+  },
+  {
+   "district_no": "A",
+   "kana": "コ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "駒込下"
+  },
+  {
+   "district_no": "A",
+   "kana": "サ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "笹巻"
+  },
+  {
+   "district_no": "B",
+   "kana": "シ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "塩野渕"
+  },
+  {
+   "district_no": "A",
+   "kana": "シ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "島潟"
+  },
+  {
+   "district_no": "B",
+   "kana": "シ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "島川原"
+  },
+  {
+   "district_no": "B",
+   "kana": "シ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "下飯田"
+  },
+  {
+   "district_no": "A",
+   "kana": "シ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "下大浦"
+  },
+  {
+   "district_no": "A",
+   "kana": "シ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "下組"
+  },
+  {
+   "district_no": "A",
+   "kana": "タ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "高岡"
+  },
+  {
+   "district_no": "A",
+   "kana": "タ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "高屋敷"
+  },
+  {
+   "district_no": "A",
+   "kana": "タ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "滝谷"
+  },
+  {
+   "district_no": "A",
+   "kana": "タ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "棚鱗"
+  },
+  {
+   "district_no": "B",
+   "kana": "タ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "田屋"
+  },
+  {
+   "district_no": "B",
+   "kana": "チ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "蝶名林"
+  },
+  {
+   "district_no": "B",
+   "kana": "ナ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "中飯田"
+  },
+  {
+   "district_no": "B",
+   "kana": "ナ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "中浦"
+  },
+  {
+   "district_no": "A",
+   "kana": "ナ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "中組"
+  },
+  {
+   "district_no": "A",
+   "kana": "ナ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "中野原"
+  },
+  {
+   "district_no": "A",
+   "kana": "ナ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "長沢"
+  },
+  {
+   "district_no": "B",
+   "kana": "ナ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "長野"
+  },
+  {
+   "district_no": "A",
+   "kana": "ナ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "楢山"
+  },
+  {
+   "district_no": "B",
+   "kana": "二",
+   "pdf": "R8shitadaB.pdf",
+   "town": "濁沢"
+  },
+  {
+   "district_no": "B",
+   "kana": "二",
+   "pdf": "R8shitadaB.pdf",
+   "town": "庭月"
+  },
+  {
+   "district_no": "A",
+   "kana": "ハ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "花渕"
+  },
+  {
+   "district_no": "A",
+   "kana": "ハ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "馬場"
+  },
+  {
+   "district_no": "B",
+   "kana": "ハ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "早水"
+  },
+  {
+   "district_no": "A",
+   "kana": "ハ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "原上"
+  },
+  {
+   "district_no": "A",
+   "kana": "ハ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "原下"
+  },
+  {
+   "district_no": "A",
+   "kana": "ヒ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "広手"
+  },
+  {
+   "district_no": "A",
+   "kana": "フ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "福岡"
+  },
+  {
+   "district_no": "A",
+   "kana": "フ",
+   "pdf": "R8shitadaA.pdf",
+   "town": "福沢"
+  },
+  {
+   "district_no": "B",
+   "kana": "マ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "曲谷"
+  },
+  {
+   "district_no": "B",
+   "kana": "ミ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "南五百川"
+  },
+  {
+   "district_no": "B",
+   "kana": "ミ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "南中"
+  },
+  {
+   "district_no": "B",
+   "kana": "ミ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "名下"
+  },
+  {
+   "district_no": "B",
+   "kana": "モ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "葎谷"
+  },
+  {
+   "district_no": "B",
+   "kana": "モ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "森町"
+  },
+  {
+   "district_no": "B",
+   "kana": "ヤ",
+   "pdf": "R8shitadaB.pdf",
+   "town": "八木前"
+  }
+ ],
+ "title": "令和8年度ごみカレンダー"
+}

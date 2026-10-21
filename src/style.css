@@ -234,3 +234,23 @@ a { color: var(--accent); }
   .map-hint p { margin: 0 0 4px; }
   .map-hint-actions .btn { flex: none; padding: 2px 18px; }
 }
+
+/* ごみカレンダー */
+.field-label { display: block; margin: 10px 0 4px; font-size: 0.88rem; color: var(--muted); }
+.field { width: 100%; min-height: 48px; padding: 8px 12px; font-size: 1rem; border: 2px solid #5b6572; border-radius: 8px; background: #fff; color: var(--fg); }
+.kana-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.btn.kana { min-width: 44px; min-height: 44px; padding: 0; font-size: 1rem; }
+.btn.kana[aria-pressed="true"] { background: var(--accent); color: var(--accent-fg); }
+.gomi-results { list-style: none; margin: 0; padding: 0; max-height: 40vh; overflow-y: auto; }
+.gomi-results li { border-bottom: 1px solid var(--line); }
+.gomi-item { display: flex; justify-content: space-between; gap: 8px; width: 100%; min-height: 48px; padding: 8px 4px; text-align: left; font: inherit; color: inherit; background: transparent; border: 0; cursor: pointer; align-items: center; }
+.gomi-item:hover { background: #eef3f9; }
+.gomi-town { font-weight: bold; overflow-wrap: anywhere; }
+.gomi-dist { flex: none; color: var(--accent); font-weight: bold; }
+.gomi-card { margin: 12px 0; padding: 12px 14px; border: 2px solid var(--accent); border-radius: 8px; background: #f4f8fc; }
+.gomi-lead { margin: 0; }
+.gomi-district { margin: 0 0 10px; font-size: 1.5rem; font-weight: bold; color: var(--accent); }
+.gomi-open { display: block; text-decoration: none; text-align: center; padding: 12px 14px; line-height: 1.4; font-weight: bold; }
+.gomi-warn { margin: 8px 0; padding: 6px 8px; font-size: 0.88rem; background: var(--warn-bg); border-radius: 4px; }
+.gomi-actions { margin-top: 8px; }
+@media (max-width: 899px) { .tab { font-size: 0.88rem; padding: 6px 2px; } }
